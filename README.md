@@ -1,5 +1,5 @@
 ---
-icon: hand-wave
+icon: house-chimney-blank
 cover: .gitbook/assets/Untitled Projecthj.jpg
 coverY: 48.266666666666666
 layout:

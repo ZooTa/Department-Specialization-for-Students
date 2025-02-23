@@ -1,3 +1,7 @@
+---
+icon: clipboard-list
+---
+
 # Use Cases
 
 #### 1.1: Processing Student Preferences for Department Specialization
