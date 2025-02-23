@@ -1,7 +1,7 @@
 ---
 icon: house-chimney-blank
-cover: .gitbook/assets/Untitled Projecthj.jpg
-coverY: 48.266666666666666
+cover: .gitbook/assets/qq.jpg
+coverY: -10.61866666666667
 layout:
   cover:
     visible: true
