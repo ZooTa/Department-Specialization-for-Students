@@ -1,7 +1,7 @@
 ---
 icon: hand-wave
-cover: .gitbook/assets/Cover page.jpg
-coverY: 0
+cover: .gitbook/assets/Untitled Projecthj.jpg
+coverY: 48.266666666666666
 layout:
   cover:
     visible: true
