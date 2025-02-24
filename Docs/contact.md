@@ -34,7 +34,7 @@ Email: [Ekramsheref646@gmail.com](mailto:Ekramsheref646@gmail.com)
 <div align="left" data-full-width="false"><figure><img src="../.gitbook/assets/Ekram Sheref.jpg" alt="Ekram Sheref photo" width="188"><figcaption></figcaption></figure></div>
 
 
-<div style="display: flex; align-items: center;">
+<div style="display: flex; justify-content: space-around; align-items: center;">
 
   <div style="margin-right: 20px; text-align: center;">
     <img src="../.gitbook/assets/yousif.jpg" alt="Yousif Ahmed photo" width="150">
