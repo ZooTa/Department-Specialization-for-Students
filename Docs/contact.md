@@ -21,14 +21,14 @@ We welcome your feedback and questions! Here’s how you can reach us:
 
 ## Team Members
 
-![Yousif Ahmed photo](.gitbook/assets/yousif.jpg)
-
 **Yousif Ahmed**\
 Role: Developer\
 Email: [yousifalsyad187@gmail.com](mailto:yousifalsyad187@gmail.com)
 
-![Ekram Sheref photo](.gitbook/assets/Ekram%20Sheref.jpg)
+<div align="left"><figure><img src="../.gitbook/assets/yousif.jpg" alt="" width="160"><figcaption></figcaption></figure></div>
 
 **Ekram Sheref**\
 Role: Designer\
 Email: [Ekramsheref646@gmail.com](mailto:Ekramsheref646@gmail.com)
+
+<div align="left" data-full-width="false"><figure><img src="../.gitbook/assets/Ekram Sheref.jpg" alt="Ekram Sheref photo" width="188"><figcaption></figcaption></figure></div>
