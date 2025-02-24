@@ -236,3 +236,47 @@ icon: clipboard-list
   * 5a. The system encounters an error while sending notifications.
   * 5b. The system logs the error and notifies the administrator.
   * 5c. Use case ends.
+
+
+
+**1.9: Updating Student Preferences**
+
+**Actors:**
+
+* Administrator
+
+**Preconditions:**
+
+* The student has already submitted their initial preferences.
+* The administrator has access to the application with the necessary privileges.
+
+**Main Success Scenario:**
+
+1. The administrator logs into the application.
+2. The administrator navigates to the "Student Preferences" section.
+3. The administrator searches for the student by name or ID.
+4. The system displays the current preferences of the selected student.
+5. The administrator selects the option to edit the preferences.
+6. The administrator updates the student's preferences as requested.
+7. The administrator submits the changes.
+8. The system saves the updated preferences and confirms the changes to the administrator.
+
+**Alternatives:**
+
+* **A1. Student Not Found:**
+  * 3a. The system cannot find the student based on the provided information.
+  * 3b. The system notifies the administrator and suggests verifying the student details.
+  * 3c. Use case ends.
+* **A2. Invalid Preference Input:**
+  * 6a. The system detects invalid input for the preferences.
+  * 6b. The system prompts the administrator to correct the input.
+  * 6c. Use case resumes at step 6.
+* **A3. System Error During Update:**
+  * 8a. The system encounters an error while saving the updated preferences.
+  * 8b. The system logs the error and notifies the administrator.
+  * 8c. Use case ends.
+
+**Postconditions:**
+
+* The student's preferences are updated in the system.
+* The changes are reflected in any subsequent processing or reports.
