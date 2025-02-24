@@ -1,6 +1,6 @@
 # Table of contents
 
-* [Department Specialization for Students](Docs/README.md)
+* [Department Specialization for Students](README.md)
 * [Project Overview.](Docs/project-overview..md)
 * [Use Cases](Docs/use-cases.md)
 * [Installation](Docs/installation.md)
