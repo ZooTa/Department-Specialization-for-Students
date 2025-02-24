@@ -21,3 +21,13 @@ layout:
 # Department Specialization for Students
 
 Department Specialization Management System streamlines student assignments to departments based on preferences and eligibility. Features include automated processing, program management, and notifications. Built with Python, it enhances administrative efficiency. Currently in development.
+
+
+# Table of contents
+
+* [Department Specialization for Students](README.md)
+* [Project Overview.](project-overview..md)
+* [Use Cases](use-cases.md)
+* [Installation](installation.md)
+* [User Guide](user-guide.md)
+* [FAQ/Support](faq-support.md)
