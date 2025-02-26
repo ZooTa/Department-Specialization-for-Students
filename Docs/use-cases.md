@@ -15,18 +15,20 @@ layout:
 
 # Use Cases
 
+## Use Cases
+
 ## 1.1: Processing Student Preferences for Department Specialization
 
-**Actors:**
+#### **Actors:**
 
 * Administrator
 
-**Preconditions:**
+#### **Preconditions:**
 
 * Student preferences are collected via a Google Form or Microsoft Form.
 * The data is available in an Excel sheet or similar format.
 
-**Main Success Scenario:**
+#### **Main Success Scenario:**
 
 1. The administrator logs into the application.
 2. The administrator uploads the Excel sheet containing student preferences into the application.
@@ -35,7 +37,7 @@ layout:
 5. The system generates an output file (e.g., Excel sheet) listing students and their assigned departments.
 6. The administrator downloads the output file for further use.
 
-**Alternatives:**
+#### **Alternatives:**
 
 * **A1. Invalid or Corrupted Data File:**
   * 2a. The system detects an invalid or corrupted data file.
@@ -46,7 +48,7 @@ layout:
   * 4b. The system logs the error and notifies the administrator.
   * 4c. Use case ends.
 
-#### 1.2: Adding a New Program to the System
+## **1.2: Adding a New Program to the System**
 
 **Actors:**
 
@@ -77,7 +79,7 @@ layout:
   * 6b. The system logs the error and notifies the administrator.
   * 6c. Use case ends.
 
-#### 1.3: Updating Eligibility Criteria for Existing Programs
+**1.3: Updating Eligibility Criteria for Existing Programs**
 
 **Actors:**
 
@@ -105,7 +107,7 @@ layout:
   * 5b. The system prompts the administrator to correct the input.
   * 5c. Use case resumes at step 5.
 
-#### 1.4: Data Backup and Recovery
+**1.4: Data Backup and Recovery**
 
 **Actors:**
 
@@ -141,7 +143,7 @@ layout:
   * 4b. The system logs the error and notifies the administrator.
   * 4c. Use case ends.
 
-#### 1.5: User Access Management
+**1.5: User Access Management**
 
 **Actors:**
 
@@ -169,7 +171,7 @@ layout:
   * 6b. The system prompts the administrator to correct the information.
   * 6c. Use case resumes at step 6.
 
-#### 1.6: Generating Reports for Department Allocation
+**1.6: Generating Reports for Department Allocation**
 
 **Actors:**
 
@@ -195,7 +197,7 @@ layout:
   * 4b. The system notifies the administrator and suggests checking the data processing status.
   * 4c. Use case ends.
 
-#### 1.7: Sending Notifications to Department Heads
+**1.7: Sending Notifications to Department Heads**
 
 **Actors:**
 
@@ -221,7 +223,7 @@ layout:
   * 5b. The system logs the error and notifies the administrator.
   * 5c. Use case ends.
 
-#### 1.8: Sending Notifications to Students
+**1.8: Sending Notifications to Students**
 
 **Actors:**
 
@@ -247,8 +249,6 @@ layout:
   * 5a. The system encounters an error while sending notifications.
   * 5b. The system logs the error and notifies the administrator.
   * 5c. Use case ends.
-
-
 
 **1.9: Updating Student Preferences**
 
@@ -292,9 +292,7 @@ layout:
 * The student's preferences are updated in the system.
 * The changes are reflected in any subsequent processing or reports.
 
-
-<<<<<<< HEAD
-=======
+## <<<<<<< HEAD
 
 **1.10: Deleting a Program**
 
@@ -339,4 +337,4 @@ layout:
 * The program is removed from the system.
 * The changes are reflected in any subsequent processing or reports.
 
->>>>>>> 5d0242635ecb10231a00ec3588800e55dccfebde
+> > > > > > > 5d0242635ecb10231a00ec3588800e55dccfebde
