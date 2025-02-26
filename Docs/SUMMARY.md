@@ -1,6 +1,6 @@
 # Table of contents
 
-* [Department Specialization for Students](README.md)
+* [Department Specialization for Students](Home.md)
 * [Project Overview.](project-overview..md)
 * [Use Cases](use-cases.md)
 * [UI Design](UI-Design.md)
