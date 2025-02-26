@@ -51,10 +51,8 @@ layout:
 - 5b. The system assigns them to a **general category** or flags them for **manual review**.  
 - 5c. The administrator manually reviews and resolves assignments.
 
+---  
 
-## 1.2: Adding a New Program to the System
-
-\=======
 ## **1.2: Adding a New Program to the System**  
 
 #### **Actors**  
@@ -154,6 +152,8 @@ layout:
 - The **program is removed from the system**.  
 - The **changes are reflected** in any subsequent processing or reports.
 
+---  
+
 ## **1.5: User Access Management**  
 
 #### **Actors**  
@@ -233,6 +233,8 @@ layout:
 - 5a. The system encounters an **error while sending notifications**.  
 - 5b. The system **logs the error and notifies the administrator**.  
 - 5c. **Use case ends**.  
+
+---  
 
 ## **1.8: Sending Notifications to Students**  
 
