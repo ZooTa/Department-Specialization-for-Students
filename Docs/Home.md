@@ -1,6 +1,6 @@
 ---
 icon: house-chimney-blank
-cover: .gitbook/assets/qq.jpg
+cover: ../.gitbook/assets/qq.jpg
 coverY: -10.61866666666667
 layout:
   cover:
