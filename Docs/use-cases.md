@@ -1,10 +1,21 @@
 ---
 icon: clipboard-list
+layout:
+  title:
+    visible: true
+  description:
+    visible: true
+  tableOfContents:
+    visible: true
+  outline:
+    visible: true
+  pagination:
+    visible: true
 ---
 
 # Use Cases
 
-#### 1.1: Processing Student Preferences for Department Specialization
+## 1.1: Processing Student Preferences for Department Specialization
 
 **Actors:**
 
