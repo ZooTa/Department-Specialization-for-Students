@@ -4,7 +4,7 @@ icon: lightbulb
 
 # Project Overview.
 
-#### Introduction
+## Introduction
 
 Welcome to the Department Specialization Management System documentation. This project is designed to streamline the process of assigning students to specialized departments within educational institutions. By automating the evaluation of student preferences against department eligibility criteria, the system enhances administrative efficiency and accuracy.
 
