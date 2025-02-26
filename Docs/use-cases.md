@@ -1,10 +1,21 @@
 ---
 icon: clipboard-list
+layout:
+  title:
+    visible: true
+  description:
+    visible: true
+  tableOfContents:
+    visible: true
+  outline:
+    visible: true
+  pagination:
+    visible: true
 ---
 
 # Use Cases
 
-#### 1.1: Processing Student Preferences for Department Specialization
+## 1.1: Processing Student Preferences for Department Specialization
 
 **Actors:**
 
@@ -39,7 +50,7 @@ icon: clipboard-list
 
 **Actors:**
 
-* Administrator
+* System Administrator
 
 **Preconditions:**
 
@@ -70,7 +81,7 @@ icon: clipboard-list
 
 **Actors:**
 
-* Administrator
+* System Administrator
 
 **Preconditions:**
 
@@ -282,3 +293,50 @@ icon: clipboard-list
 * The changes are reflected in any subsequent processing or reports.
 
 
+<<<<<<< HEAD
+=======
+
+**1.10: Deleting a Program**
+
+**Actors:**
+
+* System Administrator
+
+**Preconditions:**
+
+* The system administrator has access to the application with the necessary privileges.
+* The program to be deleted exists in the system.
+
+**Main Success Scenario:**
+
+1. The system administrator logs into the application.
+2. The administrator navigates to the "Manage Programs" section.
+3. The administrator searches for the program to be deleted.
+4. The system displays the details of the selected program.
+5. The administrator selects the option to delete the program.
+6. The system prompts the administrator to confirm the deletion.
+7. The administrator confirms the deletion.
+8. The system deletes the program and updates the list of available programs.
+9. The system confirms the successful deletion to the administrator.
+
+**Alternatives:**
+
+* **A1. Program Not Found:**
+  * 3a. The system cannot find the program based on the provided information.
+  * 3b. The system notifies the administrator and suggests verifying the program details.
+  * 3c. Use case ends.
+* **A2. Deletion Confirmation Denied:**
+  * 6a. The administrator cancels the deletion process.
+  * 6b. The system returns to the program details view.
+  * 6c. Use case ends.
+* **A3. System Error During Deletion:**
+  * 8a. The system encounters an error while deleting the program.
+  * 8b. The system logs the error and notifies the administrator.
+  * 8c. Use case ends.
+
+**Postconditions:**
+
+* The program is removed from the system.
+* The changes are reflected in any subsequent processing or reports.
+
+>>>>>>> 5d0242635ecb10231a00ec3588800e55dccfebde
