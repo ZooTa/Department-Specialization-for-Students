@@ -15,26 +15,17 @@ layout:
 
 # Use Cases  
 
-<<<<<<< HEAD
 ## **1.1: Processing Student Preferences for Department Specialization**  
 
 ### **Actors**  
 - **Administrator** – Responsible for uploading student preference data and managing the assignment process.  
 - **Student** – Provides department preferences via an external form (Google Form or Microsoft Form).  
-=======
-## Use Cases
-
-## 1.1: Processing Student Preferences for Department Specialization
-
-#### **Actors:**
->>>>>>> bd8b472689ed9b019a78caf1a7ba75480a2e411f
 
 ### **Preconditions**  
 - Students submit their department preferences through an external **Google Form or Microsoft Form**.  
 - The **administrator collects** and compiles student preferences into an **Excel sheet with a standardized format** (including Student ID, Name, Preferences, GPA).  
 - The system has **predefined eligibility criteria** for department assignment, including required subjects, GPA thresholds, and department capacity.  
 
-<<<<<<< HEAD
 ### **Main Success Scenario**  
 1. The **administrator logs into the system**.  
 2. The **administrator uploads the Excel sheet** containing student preferences.  
@@ -43,41 +34,26 @@ layout:
 5. The system **automatically assigns students to departments** based on their preferences and eligibility.  
 6. The system **generates an output file** (Excel format) listing students and their assigned departments.  
 7. The administrator **downloads the output file** for further use.  
-=======
-#### **Preconditions:**
->>>>>>> bd8b472689ed9b019a78caf1a7ba75480a2e411f
 
 ### **Alternative Scenarios**  
 
-<<<<<<< HEAD
 #### **A1. Invalid or Corrupted Data File**  
 - 3a. The system detects an **incorrect format, missing fields, or corrupted data**.  
 - 3b. The system **notifies the administrator** and requests a valid file.  
 - 3c. **Use case ends**.  
-=======
-#### **Main Success Scenario:**
->>>>>>> bd8b472689ed9b019a78caf1a7ba75480a2e411f
 
 #### **A2. System Error During Processing**  
 - 4a. The system encounters an **error while applying eligibility criteria or processing assignments**.  
 - 4b. The system **logs the error and notifies the administrator**.  
 - 4c. **Use case ends**.  
 
-<<<<<<< HEAD
 #### **A3. Student Does Not Meet Any Department’s Criteria**  
 - 5a. The system identifies students **who do not qualify for any department**.  
 - 5b. The system assigns them to a **general category** or flags them for **manual review**.  
 - 5c. The administrator manually reviews and resolves assignments.  
-=======
-#### **Alternatives:**
->>>>>>> bd8b472689ed9b019a78caf1a7ba75480a2e411f
 
 
-<<<<<<< HEAD
 ## 1.2: Adding a New Program to the System
-=======
-## **1.2: Adding a New Program to the System**
->>>>>>> bd8b472689ed9b019a78caf1a7ba75480a2e411f
 
 **Actors:**
 
@@ -108,11 +84,7 @@ layout:
   * 6b. The system logs the error and notifies the administrator.
   * 6c. Use case ends.
 
-<<<<<<< HEAD
 ## 1.3: Updating Eligibility Criteria for Existing Programs
-=======
-**1.3: Updating Eligibility Criteria for Existing Programs**
->>>>>>> bd8b472689ed9b019a78caf1a7ba75480a2e411f
 
 **Actors:**
 
@@ -140,198 +112,7 @@ layout:
   * 5b. The system prompts the administrator to correct the input.
   * 5c. Use case resumes at step 5.
 
-<<<<<<< HEAD
 ## 1.4: Deleting a Program
-=======
-**1.4: Data Backup and Recovery**
-
-**Actors:**
-
-* Administrator
-
-**Preconditions:**
-
-* The system is operational and contains data that needs to be backed up.
-
-**Main Success Scenario:**
-
-1. The administrator logs into the application.
-2. The administrator navigates to the "Data Management" section.
-3. The administrator selects the option to perform a data backup.
-4. The system compiles all relevant data into a backup file.
-5. The system prompts the administrator to choose a location to save the backup file.
-6. The administrator selects a location and confirms the backup.
-7. The system saves the backup file and confirms successful completion to the administrator.
-
-**Recovery Scenario:**
-
-1. The administrator logs into the application.
-2. The administrator navigates to the "Data Management" section.
-3. The administrator selects the option to restore data from a backup.
-4. The system prompts the administrator to select a backup file.
-5. The administrator selects the backup file and confirms the restoration.
-6. The system restores the data and confirms successful completion to the administrator.
-
-**Alternatives:**
-
-* **A1. Backup Process Error:**
-  * 4a. The system encounters an error during the backup process.
-  * 4b. The system logs the error and notifies the administrator.
-  * 4c. Use case ends.
-
-**1.5: User Access Management**
-
-**Actors:**
-
-* System Administrator
-
-**Preconditions:**
-
-* The system has multiple users with varying access needs.
-
-**Main Success Scenario:**
-
-1. The system administrator logs into the application.
-2. The administrator navigates to the "User Management" section.
-3. The administrator selects the option to add or modify user access.
-4. The system displays a list of current users and their access levels.
-5. The administrator selects a user to modify or adds a new user.
-6. The administrator assigns or updates the user's access level and permissions.
-7. The administrator submits the changes.
-8. The system saves the changes and confirms successful completion to the administrator.
-
-**Alternatives:**
-
-* **A1. Invalid User Information:**
-  * 6a. The system detects invalid user information.
-  * 6b. The system prompts the administrator to correct the information.
-  * 6c. Use case resumes at step 6.
-
-**1.6: Generating Reports for Department Allocation**
-
-**Actors:**
-
-* Administrator, Department Head
-
-**Preconditions:**
-
-* The system has processed student preferences and assigned them to departments.
-
-**Main Success Scenario:**
-
-1. The administrator logs into the application.
-2. The administrator navigates to the "Reports" section.
-3. The administrator selects the option to generate a report for department allocations.
-4. The system compiles data on student assignments, including statistics like the number of students per department, average GPA, and unmet preferences.
-5. The system generates a detailed report in a chosen format (e.g., PDF, Excel).
-6. The administrator downloads the report for distribution to department heads or for record-keeping.
-
-**Alternatives:**
-
-* **A1. No Data Available:**
-  * 4a. The system detects that no data is available for report generation.
-  * 4b. The system notifies the administrator and suggests checking the data processing status.
-  * 4c. Use case ends.
-
-**1.7: Sending Notifications to Department Heads**
-
-**Actors:**
-
-* Administrator, Department Head
-
-**Preconditions:**
-
-* The system has processed student preferences and assigned them to departments.
-
-**Main Success Scenario:**
-
-1. The administrator logs into the application.
-2. The administrator navigates to the "Notifications" section.
-3. The administrator selects the option to send notifications to department heads.
-4. The system automatically generates notifications with details of student assignments and any relevant statistics.
-5. The system sends notifications via email to department heads.
-6. The system confirms successful delivery of notifications to the administrator.
-
-**Alternatives:**
-
-* **A1. Notification Delivery Failure:**
-  * 5a. The system encounters an error while sending notifications.
-  * 5b. The system logs the error and notifies the administrator.
-  * 5c. Use case ends.
-
-**1.8: Sending Notifications to Students**
-
-**Actors:**
-
-* Administrator, Student
-
-**Preconditions:**
-
-* The system has processed student preferences and assigned them to departments.
-* Students have registered their academic email addresses in the system.
-
-**Main Success Scenario:**
-
-1. The administrator logs into the application.
-2. The administrator navigates to the "Notifications" section.
-3. The administrator selects the option to send notifications to students.
-4. The system automatically generates notifications with details of department assignments.
-5. The system sends notifications via email to students, informing them of their department assignments.
-6. The system confirms successful delivery of notifications to the administrator.
-
-**Alternatives:**
-
-* **A1. Notification Delivery Failure:**
-  * 5a. The system encounters an error while sending notifications.
-  * 5b. The system logs the error and notifies the administrator.
-  * 5c. Use case ends.
-
-**1.9: Updating Student Preferences**
-
-**Actors:**
-
-* Administrator
-
-**Preconditions:**
-
-* The student has already submitted their initial preferences.
-* The administrator has access to the application with the necessary privileges.
-
-**Main Success Scenario:**
-
-1. The administrator logs into the application.
-2. The administrator navigates to the "Student Preferences" section.
-3. The administrator searches for the student by name or ID.
-4. The system displays the current preferences of the selected student.
-5. The administrator selects the option to edit the preferences.
-6. The administrator updates the student's preferences as requested.
-7. The administrator submits the changes.
-8. The system saves the updated preferences and confirms the changes to the administrator.
-
-**Alternatives:**
-
-* **A1. Student Not Found:**
-  * 3a. The system cannot find the student based on the provided information.
-  * 3b. The system notifies the administrator and suggests verifying the student details.
-  * 3c. Use case ends.
-* **A2. Invalid Preference Input:**
-  * 6a. The system detects invalid input for the preferences.
-  * 6b. The system prompts the administrator to correct the input.
-  * 6c. Use case resumes at step 6.
-* **A3. System Error During Update:**
-  * 8a. The system encounters an error while saving the updated preferences.
-  * 8b. The system logs the error and notifies the administrator.
-  * 8c. Use case ends.
-
-**Postconditions:**
-
-* The student's preferences are updated in the system.
-* The changes are reflected in any subsequent processing or reports.
-
-## <<<<<<< HEAD
-
-**1.10: Deleting a Program**
->>>>>>> bd8b472689ed9b019a78caf1a7ba75480a2e411f
 
 **Actors:**
 
@@ -374,7 +155,6 @@ layout:
 * The program is removed from the system.
 * The changes are reflected in any subsequent processing or reports.
 
-<<<<<<< HEAD
 
 ## 1.5: User Access Management
 
@@ -565,6 +345,3 @@ layout:
   * 4a. The system encounters an error during the backup process.
   * 4b. The system logs the error and notifies the administrator.
   * 4c. Use case ends.
-=======
-> > > > > > > 5d0242635ecb10231a00ec3588800e55dccfebde
->>>>>>> bd8b472689ed9b019a78caf1a7ba75480a2e411f
