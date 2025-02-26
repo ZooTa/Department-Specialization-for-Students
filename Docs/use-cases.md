@@ -13,84 +13,52 @@ layout:
     visible: true
 ---
 
-# Use Cases
+# Use Cases  
 
-<<<<<<< HEAD
+## **1.1: Processing Student Preferences for Department Specialization**  
 
-## **1.1: Processing Student Preferences for Department Specialization**
+### **Summary Table**  
+| **Use Case ID** | **Use Case Name** | **Primary Actor** | **Description** |
+|----------------|------------------|------------------|----------------|
+| 1.1 | Processing Student Preferences for Department Specialization | Administrator | The system processes student department preferences and assigns them based on eligibility criteria. |
 
-### **Actors**
+### **Use Case Description**  
 
-* **Administrator** – Responsible for uploading student preference data and managing the assignment process.
-* **Student** – Provides department preferences via an external form (Google Form or Microsoft Form).\
-  \=======
+#### **Actors**  
+- **Administrator** – Responsible for uploading student preference data and managing the assignment process.  
+- **Student** – Provides department preferences via an external form (Google Form or Microsoft Form).  
 
-## Use Cases
+#### **Preconditions**  
+- Students submit their department preferences through an external **Google Form or Microsoft Form**.  
+- The **administrator collects** and compiles student preferences into an **Excel sheet with a standardized format** (including Student ID, Name, Preferences, GPA).  
+- The system has **predefined eligibility criteria** for department assignment, including required subjects, GPA thresholds, and department capacity.  
 
-## 1.1: Processing Student Preferences for Department Specialization
+#### **Main Success Scenario**  
+1. The **administrator logs into the system**.  
+2. The **administrator uploads the Excel sheet** containing student preferences.  
+3. The system **validates the file structure and data integrity** (e.g., checks for missing fields, correct format).  
+4. The system **applies department eligibility criteria**, filtering students based on required subjects, GPA, and available capacity.  
+5. The system **automatically assigns students to departments** based on their preferences and eligibility.  
+6. The system **generates an output file** (Excel format) listing students and their assigned departments.  
+7. The administrator **downloads the output file** for further use.  
 
-#### **Actors:**
+#### **Alternative Scenarios**  
 
-> > > > > > > bd8b472689ed9b019a78caf1a7ba75480a2e411f
+##### **A1. Invalid or Corrupted Data File**  
+- 3a. The system detects an **incorrect format, missing fields, or corrupted data**.  
+- 3b. The system **notifies the administrator** and requests a valid file.  
+- 3c. **Use case ends**.  
 
-### **Preconditions**
+##### **A2. System Error During Processing**  
+- 4a. The system encounters an **error while applying eligibility criteria or processing assignments**.  
+- 4b. The system **logs the error and notifies the administrator**.  
+- 4c. **Use case ends**.  
 
-* Students submit their department preferences through an external **Google Form or Microsoft Form**.
-* The **administrator collects** and compiles student preferences into an **Excel sheet with a standardized format** (including Student ID, Name, Preferences, GPA).
-* The system has **predefined eligibility criteria** for department assignment, including required subjects, GPA thresholds, and department capacity.
+##### **A3. Student Does Not Meet Any Department’s Criteria**  
+- 5a. The system identifies students **who do not qualify for any department**.  
+- 5b. The system assigns them to a **general category** or flags them for **manual review**.  
+- 5c. The administrator manually reviews and resolves assignments.  
 
-<<<<<<< HEAD
-
-### **Main Success Scenario**
-
-1. The **administrator logs into the system**.
-2. The **administrator uploads the Excel sheet** containing student preferences.
-3. The system **validates the file structure and data integrity** (e.g., checks for missing fields, correct format).
-4. The system **applies department eligibility criteria**, filtering students based on required subjects, GPA, and available capacity.
-5. The system **automatically assigns students to departments** based on their preferences and eligibility.
-6. The system **generates an output file** (Excel format) listing students and their assigned departments.
-7. The administrator **downloads the output file** for further use.\
-   \=======
-
-#### **Preconditions:**
-
-> > > > > > > bd8b472689ed9b019a78caf1a7ba75480a2e411f
-
-### **Alternative Scenarios**
-
-<<<<<<< HEAD
-
-#### **A1. Invalid or Corrupted Data File**
-
-* 3a. The system detects an **incorrect format, missing fields, or corrupted data**.
-* 3b. The system **notifies the administrator** and requests a valid file.
-* 3c. **Use case ends**.\
-  \=======
-
-#### **Main Success Scenario:**
-
-> > > > > > > bd8b472689ed9b019a78caf1a7ba75480a2e411f
-
-#### **A2. System Error During Processing**
-
-* 4a. The system encounters an **error while applying eligibility criteria or processing assignments**.
-* 4b. The system **logs the error and notifies the administrator**.
-* 4c. **Use case ends**.
-
-<<<<<<< HEAD
-
-#### **A3. Student Does Not Meet Any Department’s Criteria**
-
-* 5a. The system identifies students **who do not qualify for any department**.
-* 5b. The system assigns them to a **general category** or flags them for **manual review**.
-* 5c. The administrator manually reviews and resolves assignments.\
-  \=======
-
-#### **Alternatives:**
-
-> > > > > > > bd8b472689ed9b019a78caf1a7ba75480a2e411f
-
-<<<<<<< HEAD
 
 ## 1.2: Adding a New Program to the System
 
