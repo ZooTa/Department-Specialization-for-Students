@@ -1,5 +1,5 @@
 ---
-icon: Paintbrush Fine
+icon: paintbrush-fine
 layout:
   title:
     visible: true
