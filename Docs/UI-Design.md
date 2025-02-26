@@ -1,3 +1,7 @@
+---
+icon: Paintbrush Fine
+---
+
 ## UI Screens
 
 ### Introduction
@@ -5,6 +9,7 @@
 This section showcases the login and dashboard screens of our application, illustrating the main user interactions.
 
 ### Login Screen
+<div align="left"><figure><img src="../.gitbook/assets/login-screen.png" alt="Login Screen" width="700"><figcaption></figcaption></figure></div>
 
 
 ### Dashboard Screen
