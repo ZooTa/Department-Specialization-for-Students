@@ -111,7 +111,7 @@ layout:
 
 ---  
 
-## **1.4: Deleting a Program**  
+## **1.4: Deleting an Existing Programs**  
 
 #### **Actors**  
 - **System Administrator** – Responsible for removing academic programs from the system.  
