@@ -12,17 +12,9 @@ layout:
   pagination:
     visible: true
 ---
-
 # Use Cases  
 
 ## **1.1: Processing Student Preferences for Department Specialization**  
-
-### **Summary Table**  
-| **Use Case ID** | **Use Case Name** | **Primary Actor** | **Description** |
-|----------------|------------------|------------------|----------------|
-| 1.1 | Processing Student Preferences for Department Specialization | Administrator | The system processes student department preferences and assigns them based on eligibility criteria. |
-
-### **Use Case Description**  
 
 #### **Actors**  
 - **Administrator** – Responsible for uploading student preference data and managing the assignment process.  
@@ -57,7 +49,7 @@ layout:
 ##### **A3. Student Does Not Meet Any Department’s Criteria**  
 - 5a. The system identifies students **who do not qualify for any department**.  
 - 5b. The system assigns them to a **general category** or flags them for **manual review**.  
-- 5c. The administrator manually reviews and resolves assignments.  
+- 5c. The administrator manually reviews and resolves assignments.
 
 
 ## 1.2: Adding a New Program to the System
