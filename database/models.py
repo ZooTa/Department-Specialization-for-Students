@@ -197,11 +197,13 @@ class Preferences(Base):
     project_id = Column(Integer, ForeignKey('project.id'), primary_key=True)
     preference_order = Column(Integer, primary_key=True)
 
-    # Foreign Keys
-    # Optional foreign keys for department, program, and specialization
-    department_id = Column(Integer, ForeignKey('department.id'), nullable=True)
-    program_id = Column(Integer, ForeignKey('program.id'), nullable=True)
-    specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=True)
+    preference = Column(String)
+
+#     # Foreign Keys
+#     # Optional foreign keys for department, program, and specialization
+#     department_id = Column(Integer, ForeignKey('department.id'), nullable=True)
+#     program_id = Column(Integer, ForeignKey('program.id'), nullable=True)
+#     specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=True)
 
     # Relationships
     # Relationship with Student: one preference belongs to one student
