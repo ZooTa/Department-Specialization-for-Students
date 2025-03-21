@@ -3,13 +3,15 @@
 from services.student_service import StudentService
 from services.program_service import ProgramService
 from services.specialization_service import SpecializationService
+from services.department_service import DepartmentService
 from services.preferences_service import PreferencesService
 
 class AssignmentProcess:
-    def __init__(self, student_service, program_service, specialization_service, preferences_service):
+    def __init__(self, student_service, program_service, specialization_service, department_service, preferences_service):
         self.student_service = student_service
         self.program_service = program_service
         self.specialization_service = specialization_service
+        self.department_service = department_service
         self.preferences_service = preferences_service
 
     def assign_students(self, project_type):
@@ -20,7 +22,8 @@ class AssignmentProcess:
                 self.assign_to_program(student, preferences)
             elif project_type == 'specialization':
                 self.assign_to_specialization(student, preferences)
-            # Add logic for department if needed
+            elif project_type == 'department':
+                self.assign_to_department(student, preferences)
 
     def assign_to_program(self, student, preferences):
         programs = self.program_service.get_all_programs()
@@ -38,6 +41,14 @@ class AssignmentProcess:
                     self.student_service.assign_to_specialization(student.id, specialization.id)
                     return
 
+    def assign_to_department(self, student, preferences):
+        departments = self.department_service.get_all_departments()
+        for preference in preferences:
+            for department in departments:
+                if department.id == preference.department_id and self.is_eligible_for_department(student, department):
+                    self.student_service.assign_to_department(student.id, department.id)
+                    return
+
     def is_eligible_for_program(self, student, program):
         return (student.gpa >= program.gpa_threshold and
                 self.has_completed_required_subjects(student, program.subjects_required) and
@@ -47,6 +58,9 @@ class AssignmentProcess:
         return (student.gpa >= specialization.gpa_threshold and
                 self.has_completed_required_subjects(student, specialization.subjects_required) and
                 self.is_within_capacity(student, specialization.student_capacity))
+
+    def is_eligible_for_department(self, student, department):
+        return self.is_within_capacity(student, department.student_capacity)
 
     def has_completed_required_subjects(self, student, required_subjects):
         return all(subject in student.passed_subjects for subject in required_subjects.split(','))
