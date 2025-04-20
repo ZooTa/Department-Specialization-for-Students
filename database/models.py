@@ -1,346 +1,547 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, Float, DateTime
 from sqlalchemy.orm import relationship
-from base_models import Base
+from datetime import datetime
 
+from .base_models import Base
 
 class Faculty(Base):
     __tablename__ = 'faculty'
-
-    # Primary Key
-    # ID column: primary key, unique, integer
-    id = Column(Integer, primary_key=True, unique=True)
-
-    # Attributes
-    # Name column: string, not necessarily unique
+    id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
 
-    # Relationships
-    # Relationship with Department: one faculty can have many departments
-    departments = relationship('Department', back_populates='faculty')
-
+    departments = relationship('Department', back_populates='faculty', cascade='all, delete-orphan')
 
 
 class Department(Base):
     __tablename__ = 'department'
-
-    # Primary Key
-    # ID column: primary key, unique, integer
-    id = Column(Integer, primary_key=True, unique=True)
-
-    # Attributes
-    # Name column: string, not necessarily unique
+    id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    # Student capacity: integer
     student_capacity = Column(Integer, nullable=False)
-
-    #Foreign keys
-    # Foreign key to Faculty: non-nullable
     faculty_id = Column(Integer, ForeignKey('faculty.id'), nullable=False)
 
-    # Relationships
-    # Relationship with Faculty: many departments to one faculty
     faculty = relationship('Faculty', back_populates='departments')
-    # Relationship with Program: one department can have many programs
-    programs = relationship('Program', back_populates='department')
-    # Relationship with Specialization: one department can have many specializations
-    specializations = relationship('Specialization', back_populates='department')
+    programs = relationship('Program', back_populates='department', cascade='all, delete-orphan')
+    specializations = relationship('Specialization', back_populates='department', cascade='all, delete-orphan')
 
+    department_heads = relationship('DepartmentHead', back_populates='department')
+    # assignment_results = relationship('AssignmentResult', back_populates='department')
+    # preferences = relationship('Preferences', back_populates='department')
 
 
 class Program(Base):
     __tablename__ = 'program'
-
-    # Primary Key
-    # ID column: primary key, unique, integer
-    id = Column(Integer, primary_key=True, unique=True)
-
-    # Attributes
-    # Name column: string, not necessarily unique
+    id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    # Criteria to join the program
-    subjects_required = Column(String, nullable=False)  # Subjects required to join
-    gpa_threshold = Column(Float, nullable=False)       # GPA threshold for the program
-    student_capacity = Column(Integer, nullable=False)  # Capacity of the program
-
-    # Foreign Keys
-    # Foreign key to Department: non-nullable
     department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
+    subjects_required = Column(Text, nullable=False)
+    gpa_threshold = Column(Float, nullable=False)
+    student_capacity = Column(Integer, nullable=False)
 
-    # Relationships
-    # Relationship with Department: many programs to one department
     department = relationship('Department', back_populates='programs')
-    # Relationship with Specialization: one program can have many specializations
-    specializations = relationship('Specialization', back_populates='program')
+    specializations = relationship('Specialization', back_populates='program', cascade='all, delete-orphan')
 
+    # assignment_results = relationship('AssignmentResult', back_populates='program')
+    # preferences = relationship('Preferences', back_populates='program')
 
 
 class Specialization(Base):
     __tablename__ = 'specialization'
-
-    # Primary Key
-    # ID column: primary key, unique, integer
-    id = Column(Integer, primary_key=True, unique=True)
-
-    # Attributes
-    # Name column: string, not necessarily unique
+    id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    # Criteria to join the specialization
-    subjects_required = Column(String, nullable=False)  # Subjects required to join
-    gpa_threshold = Column(Float, nullable=False)       # GPA threshold for the specialization
-    student_capacity = Column(Integer, nullable=False)  # Capacity of the specialization
-
-    # Foreign Keys
-    # Foreign key to Program: non-nullable
+    subjects_required = Column(Text, nullable=False)
+    gpa_threshold = Column(Float, nullable=False)
+    student_capacity = Column(Integer, nullable=False)
     program_id = Column(Integer, ForeignKey('program.id'), nullable=False)
-
-    # Relationships
-    # Relationship with Program: many specializations to one program
-    program = relationship('Program', back_populates='specializations')
-
-
-
-class Admin(Base):
-    __tablename__ = 'admin'
-
-    # Primary Key
-    # ID column: primary key, unique, integer
-    id = Column(Integer, primary_key=True, unique=True)
-
-    # Attributes
-    # Name column: string, not necessarily unique
-    name = Column(String, nullable=False)
-    # SSN column: unique string
-    ssn = Column(String, unique=True, nullable=False)
-    # Email column: unique string
-    email = Column(String, unique=True, nullable=False)
-    # Phone number column: string
-    phone_number = Column(String, nullable=False)
-    # Username column: unique string
-    username = Column(String, unique=True, nullable=False)
-    # Password column: string
-    password = Column(String, nullable=False)
-    # Role column: string, can be 'admin', 'super admin', or 'system admin'
-    role = Column(String, nullable=False)
-    # Created by column: integer, references another admin
-    created_by = Column(Integer, ForeignKey('admin.id'), nullable=True)
-    # Created at column: datetime
-    created_at = Column(DateTime, nullable=False)
-
-    # Relationships
-    # Relationship with ActionLog: one admin can have many action logs
-    action_logs = relationship('ActionLog', back_populates='admin')
-
-
-
-class DepartmentHead(Base):
-    __tablename__ = 'department_head'
-
-    # Primary Key
-    # ID column: primary key, unique, integer
-    id = Column(Integer, primary_key=True, unique=True)
-
-    # Attributes
-    # Name column: string, not necessarily unique
-    name = Column(String, nullable=False)
-    # Email column: unique string
-    email = Column(String, unique=True, nullable=False)
-    # Phone number column: string
-    phone_number = Column(String, nullable=False)
-
-    # Foreign Keys
-    # Foreign key to Department: non-nullable
     department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
 
-    # Relationships
-    # Relationship with Department: one-to-one relationship
-    department = relationship('Department', back_populates='department_head', uselist=False)
+    department = relationship('Department', back_populates='specializations')
+    program = relationship('Program', back_populates='specializations')
 
+    # assignment_results = relationship('AssignmentResult', back_populates='specialization')
+    # preferences = relationship('Preferences', back_populates='specialization')
+
+
+
+
+
+class Person(Base):
+    __tablename__ = 'person'
+
+    id = Column(Integer, primary_key=True)
+    first_name = Column(String, nullable=False)
+    last_name = Column(String, nullable=False)
+    ssn = Column(String, unique=True, nullable=False)
+    email = Column(String, nullable=False)
+    phone_number = Column(String, nullable=False)
+
+    student = relationship('Student', back_populates='person',
+                           uselist=False,
+                           cascade="all, delete-orphan",
+                           single_parent=True)
+
+    admin = relationship('Admin', back_populates='person',
+                         uselist=False,
+                         cascade="all, delete-orphan",
+                         single_parent=True)
+
+    department_head = relationship('DepartmentHead', back_populates='person',
+                                   uselist=False,
+                                   cascade="all, delete-orphan",
+                                   single_parent=True)
 
 
 class Student(Base):
     __tablename__ = 'student'
 
-    # Primary Key
-    # ID column: primary key, unique, integer
-    id = Column(Integer, primary_key=True, unique=True)  # ID given by the college
-
-    # Attributes
-    # SSN column: unique string
-    ssn = Column(String, unique=True, nullable=False)
-    # Name column: string, not necessarily unique
-    name = Column(String, nullable=False)
-    # Email column: unique string
-    email = Column(String, unique=True, nullable=False)
-    # Phone number column: string
-    phone_number = Column(String, nullable=False)
-    # Gender column: string
+    person_id = Column(Integer, ForeignKey('person.id', ondelete="CASCADE"), primary_key=True)
     gender = Column(String, nullable=False)
-    # GPA column: float
     gpa = Column(Float, nullable=False)
+    eligibility_rank = Column(Integer, nullable=False)
+    passed_subjects = Column(Text, nullable=False)
 
-    # Relationships
-    # Relationship with Preferences: one student can have many preferences
-    preferences = relationship('Preferences', back_populates='student')
-    # Relationship with AssignmentResults: one student can have many assignment results
-    assignment_results = relationship('AssignmentResult', back_populates='student')
-    # Relationship with StudentGrades: one student can have many grades
-    grades = relationship('StudentGrades', back_populates='student')
+    person = relationship('Person', back_populates='student',
+                          cascade="all, delete",
+                          single_parent=True)
 
 
+class Admin(Base):
+    __tablename__ = 'admin'
 
-class Preferences(Base):
-    __tablename__ = 'preferences'
+    person_id = Column(Integer, ForeignKey('person.id', ondelete="CASCADE"), primary_key=True)
+    username = Column(String, nullable=False)
+    password = Column(String, nullable=False)
+    role = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    # Primary Key
-    # Composite primary key: student_id, project_id, preference_order
-    student_id = Column(Integer, ForeignKey('student.id'), primary_key=True)
-    project_id = Column(Integer, ForeignKey('project.id'), primary_key=True)
-    preference_order = Column(Integer, primary_key=True)
+    person = relationship('Person', back_populates='admin',
+                          cascade="all, delete",  # delete person if admin is deleted
+                          single_parent=True)
 
-    preference = Column(String)
-
-#     # Foreign Keys
-#     # Optional foreign keys for department, program, and specialization
-#     department_id = Column(Integer, ForeignKey('department.id'), nullable=True)
-#     program_id = Column(Integer, ForeignKey('program.id'), nullable=True)
-#     specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=True)
-
-    # Relationships
-    # Relationship with Student: one preference belongs to one student
-    student = relationship('Student', back_populates='preferences')
-    # Relationship with Project: one preference belongs to one project
-    project = relationship('Project', back_populates='preferences')
+    projects = relationship('Project', back_populates='creator')
+    action_logs = relationship('ActionLog', back_populates='admin')
 
 
+class DepartmentHead(Base):
+    __tablename__ = 'department_head'
 
-class AssignmentResult(Base):
-    __tablename__ = 'assignment_result'
+    person_id = Column(Integer, ForeignKey('person.id', ondelete="CASCADE"), primary_key=True)
+    department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
 
-    # Primary Key
-    # ID column: primary key, unique, integer
-    id = Column(Integer, primary_key=True, unique=True)
+    person = relationship('Person', back_populates='department_head',
+                          cascade="all, delete",  # delete person if head is deleted
+                          single_parent=True)
 
-    # Foreign Keys
-    # Student ID: non-nullable
-    student_id = Column(Integer, ForeignKey('student.id'), nullable=False)
-    # Optional foreign keys for department, program, and specialization
-    department_id = Column(Integer, ForeignKey('department.id'), nullable=True)
-    program_id = Column(Integer, ForeignKey('program.id'), nullable=True)
-    specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=True)
-
-    # Relationships
-    # Relationship with Student: one assignment result belongs to one student
-    student = relationship('Student', back_populates='assignment_results')
+    department = relationship('Department', back_populates='department_heads')
 
 
 
-class StudentGrades(Base):
-    __tablename__ = 'student_grades'
 
-    # Primary Key
-    # ID column: primary key, unique, integer
-    id = Column(Integer, primary_key=True, unique=True)
-
-    # Foreign Keys
-    # Student ID: non-nullable
-    student_id = Column(Integer, ForeignKey('student.id'), nullable=False)
-
-    # Attributes
-    # Subject code: string
-    subject_code = Column(String, nullable=False)
-    # Semester: string
-    semester = Column(String, nullable=False)
-    # Credit hours: integer
-    credit_hours = Column(Integer, nullable=False)
-    # Points: float
-    points = Column(Float, nullable=False)
-
-    # Relationships
-    # Relationship with Student: one grade belongs to one student
-    student = relationship('Student', back_populates='grades')
-
-
-
-class Project(Base):
-    __tablename__ = 'project'
-
-    # Primary Key
-    # ID column: primary key, unique, integer
-    id = Column(Integer, primary_key=True, unique=True)
-
-    # Attributes
-    # Name column: string, not necessarily unique
-    name = Column(String, nullable=False)
-    # Excel file name: string
-    excel_file_name = Column(String, nullable=False)
-    # Status column: string, indicates if the project is active, completed, etc.
-    status = Column(String, nullable=False)
-    # Status column: string, indicates if the project is active, completed, etc.
-    type = Column(String, nullable=False)
-    # Directory column: string, indicates if the project is department, program, specialization.
-    directory = Column(String, nullable=False)
-    # Created by column: integer, references an admin
-    created_by = Column(Integer, ForeignKey('admin.id'), nullable=False)
-    # Created at column: datetime
-    created_at = Column(DateTime, nullable=False)
-
-    # Relationships
-    # Relationship with AssignmentResult: one project can have many assignment results
-    assignment_results = relationship('AssignmentResult', back_populates='project')
-    # Relationship with Notification: one project can have many notifications
-    notifications = relationship('Notification', back_populates='project')
-
-
-
-class Notification(Base):
-    __tablename__ = 'notification'
-
-    # Primary Key
-    # ID column: primary key, unique, integer
-    id = Column(Integer, primary_key=True, unique=True)
-
-    # Attributes
-    # Recipient email: string
-    recipient_email = Column(String, nullable=False)
-    # Message type: string, indicates the type of recipient (e.g., admin, super admin)
-    message_type = Column(String, nullable=False)
-    # Status: string, indicates if the notification has been sent
-    status = Column(String, nullable=False)
-    # Sent at: datetime, indicates when the notification was sent
-    sent_at = Column(DateTime, nullable=True)
-
-    # Foreign Keys
-    # Project ID: non-nullable
-    project_id = Column(Integer, ForeignKey('project.id'), nullable=False)
-
-    # Relationships
-    # Relationship with Project: one notification belongs to one project
-    project = relationship('Project', back_populates='notifications')
-
-
-
-class ActionLog(Base):
-    __tablename__ = 'action_log'
-
-    # Primary Key
-    # ID column: primary key, unique, integer
-    id = Column(Integer, primary_key=True, unique=True)
-
-    # Attributes
-    # Timestamp: datetime, indicates when the action was performed
-    timestamp = Column(DateTime, nullable=False)
-    # Action name: string, describes the action performed
-    action_name = Column(String, nullable=False)
-    # Action details: string, provides additional details about the action
-    action_details = Column(String, nullable=True)
-
-    # Foreign Keys
-    # User ID: non-nullable, links to the Admin table
-    user_id = Column(Integer, ForeignKey('admin.id'), nullable=False)
-
-    # Relationships
-    # Relationship with Admin: one action log belongs to one admin
-    admin = relationship('Admin', back_populates='action_logs')
+#
+# class StudentGrades(Base):
+#     __tablename__ = 'student_grades'
+#     student_id = Column(Integer, ForeignKey('student.person_id'), primary_key=True)
+#     subject_code = Column(String, primary_key=True)
+#     semester = Column(String, primary_key=True)
+#     points = Column(Float, nullable=False)
+#     credit_hours = Column(Float, nullable=False)
+#
+#     student = relationship('Student', back_populates='student_grades')
+#
+#
+# class Project(Base):
+#     __tablename__ = 'project'
+#     id = Column(Integer, primary_key=True)
+#     name = Column(String, nullable=False)
+#     excel_file_name = Column(String, nullable=False)
+#     status = Column(String, nullable=False)
+#     stage = Column(String, nullable=False)
+#     directory = Column(String, nullable=False)
+#     created_by = Column(Integer, ForeignKey('admin.person_id'), nullable=False)
+#     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+#
+#     creator = relationship('Admin', back_populates='projects')
+#     notifications = relationship('Notification', back_populates='project')
+#     assignment_results = relationship('AssignmentResult', back_populates='project')
+#     preferences = relationship('Preferences', back_populates='project')
+#
+#
+# class Notification(Base):
+#     __tablename__ = 'notification'
+#     id = Column(Integer, primary_key=True)
+#     project_id = Column(Integer, ForeignKey('project.id'), nullable=False)
+#     recipient_email = Column(String, nullable=False)
+#     message_type = Column(String, nullable=False)
+#     status = Column(String, nullable=False)
+#     sent_at = Column(DateTime, nullable=False)
+#
+#     project = relationship('Project', back_populates='notifications')
+#
+#
+# class AssignmentResult(Base):
+#     __tablename__ = 'assignment_result'
+#     id = Column(Integer, primary_key=True)
+#     project_id = Column(Integer, ForeignKey('project.id'), nullable=False)
+#     student_ssn = Column(String, ForeignKey('student.person_id'), nullable=False)
+#     department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
+#     program_id = Column(Integer, ForeignKey('program.id'), nullable=False)
+#     specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=False)
+#     gpa = Column(Float, nullable=False)
+#     assignment_date = Column(DateTime, nullable=False)
+#     status = Column(String, nullable=False)
+#
+#     project = relationship('Project', back_populates='assignment_results')
+#     student = relationship('Student', back_populates='assignment_results')
+#     department = relationship('Department', back_populates='assignment_results')
+#     program = relationship('Program', back_populates='assignment_results')
+#     specialization = relationship('Specialization', back_populates='assignment_results')
+#
+#
+# class Preferences(Base):
+#     __tablename__ = 'preferences'
+#     student_id = Column(Integer, ForeignKey('student.person_id'), primary_key=True)
+#     project_id = Column(Integer, ForeignKey('project.id'), primary_key=True)
+#     department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
+#     program_id = Column(Integer, ForeignKey('program.id'), nullable=False)
+#     specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=False)
+#     preference_order = Column(Integer, primary_key=True)
+#
+#     student = relationship('Student', back_populates='preferences')
+#     project = relationship('Project', back_populates='preferences')
+#     department = relationship('Department', back_populates='preferences')
+#     program = relationship('Program', back_populates='preferences')
+#     specialization = relationship('Specialization', back_populates='preferences')
+#
+#
+# class ActionLog(Base):
+#     __tablename__ = 'action_log'
+#     id = Column(Integer, primary_key=True)
+#     user_id = Column(Integer, ForeignKey('admin.person_id'), nullable=False)
+#     action_name = Column(String, nullable=False)
+#     action_details = Column(Text, nullable=False)
+#     timestamp = Column(DateTime, default=datetime.utcnow, nullable=False)
+#
+#     admin = relationship('Admin', back_populates='action_logs')
+#
+#
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+# class AssignmentResult(Base):
+#     __tablename__ = 'assignment_result'
+#     id = Column(Integer, primary_key=True)
+#     project_id = Column(Integer, ForeignKey('project.id'), nullable=False)
+#     student_ssn = Column(String, ForeignKey('student.person_id'), nullable=False)
+#     department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
+#     program_id = Column(Integer, ForeignKey('program.id'), nullable=False)
+#     specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=False)
+#     gpa = Column(Float)
+#     assignment_date = Column(DateTime)
+#     status = Column(String)
+#
+#     project = relationship('Project', back_populates='assignment_results')
+#     student = relationship('Student', back_populates='assignment_results')
+#     department = relationship('Department', back_populates='assignment_results')
+#     program = relationship('Program', back_populates='assignment_results')
+#     specialization = relationship('Specialization', back_populates='assignment_results')
+
+
+# class Preferences(Base):
+#     __tablename__ = 'preferences'
+#     student_id = Column(Integer, ForeignKey('student.person_id'), primary_key=True)
+#     project_id = Column(Integer, ForeignKey('project.id'), primary_key=True)
+#     department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
+#     program_id = Column(Integer, ForeignKey('program.id'), nullable=False)
+#     specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=False)
+#     preference_order = Column(Integer, primary_key=True)
+#
+#     student = relationship('Student', back_populates='preferences')
+#     project = relationship('Project', back_populates='preferences')
+#     department = relationship('Department', back_populates='preferences')
+#     program = relationship('Program', back_populates='preferences')
+#     specialization = relationship('Specialization', back_populates='preferences')
+
+
+# class ActionLog(Base):
+#     __tablename__ = 'action_log'
+#     id = Column(Integer, primary_key=True)
+#     user_id = Column(Integer, ForeignKey('admin.person_id'))
+#     action_name = Column(String)
+#     action_details = Column(Text)
+#     timestamp = Column(DateTime, default=datetime.utcnow)
+#
+#     admin = relationship('Admin', back_populates='action_logs')
+
+#
+# General Imports and Base:
+# # Primary Key
+#
+# # ID column: primary key, unique, integer
+#
+# # Attributes
+#
+# # Name column: string, not necessarily unique
+#
+# # Relationships
+#
+# # Relationship with Department: one faculty can have many departments
+#
+# Department:
+# # Primary Key
+#
+# # ID column: primary key, unique, integer
+#
+# # Attributes
+#
+# # Name column: string, not necessarily unique
+#
+# # Student capacity: integer
+#
+# #Foreign keys
+#
+# # Foreign key to Faculty: non-nullable
+#
+# # Relationships
+#
+# # Relationship with Faculty: many departments to one faculty
+#
+# # Relationship with Program: one department can have many programs
+#
+# # Relationship with Specialization: one department can have many specializations
+#
+# Program:
+# # Primary Key
+#
+# # ID column: primary key, unique, integer
+#
+# # Attributes
+#
+# # Name column: string, not necessarily unique
+#
+# # Criteria to join the program
+#
+# # Subjects required to join
+#
+# # GPA threshold for the program
+#
+# # Capacity of the program
+#
+# # Foreign Keys
+#
+# # Foreign key to Department: non-nullable
+#
+# # Relationships
+#
+# # Relationship with Department: many programs to one department
+#
+# # Relationship with Specialization: one program can have many specializations
+#
+# Specialization:
+# # Primary Key
+#
+# # ID column: primary key, unique, integer
+#
+# # Attributes
+#
+# # Name column: string, not necessarily unique
+#
+# # Criteria to join the specialization
+#
+# # Subjects required to join
+#
+# # GPA threshold for the specialization
+#
+# # Capacity of the specialization
+#
+# # Foreign Keys
+#
+# # Foreign key to Program: non-nullable
+#
+# # Relationships
+#
+# # Relationship with Program: many specializations to one program
+#
+# Admin:
+# # Primary Key
+#
+# # ID column: primary key, unique, integer
+#
+# # Attributes
+#
+# # Name column: string, not necessarily unique
+#
+# # SSN column: unique string
+#
+# # Email column: unique string
+#
+# # Phone number column: string
+#
+# # Username column: unique string
+#
+# # Password column: string
+#
+# # Role column: string, can be 'admin', 'super admin', or 'system admin'
+#
+# # Created by column: integer, references another admin
+#
+# # Created at column: datetime
+#
+# # Relationships
+#
+# # Relationship with ActionLog: one admin can have many action logs
+#
+# Department Head:
+# # Primary Key
+#
+# # ID column: primary key, unique, integer
+#
+# # Attributes
+#
+# # Name column: string, not necessarily unique
+#
+# # Email column: unique string
+#
+# # Phone number column: string
+#
+# # Foreign Keys
+#
+# # Foreign key to Department: non-nullable
+#
+# # Relationships
+#
+# # Relationship with Department: one-to-one relationship
+#
+# Student:
+# # Primary Key
+#
+# # ID column: primary key, unique, integer
+#
+# # Attributes
+#
+# # SSN column: unique string
+#
+# # Name column: string, not necessarily unique
+#
+# # Email column: unique string
+#
+# # Phone number column: string
+#
+# # Gender column: string
+#
+# # GPA column: float
+#
+# # Relationships
+#
+# # Relationship with Preferences: one student can have many preferences
+#
+# # Relationship with AssignmentResults: one student can have many assignment results
+#
+# # Relationship with StudentGrades: one student can have many grades
+#
+# Preferences:
+# # Primary Key
+#
+# # Composite primary key: student_id, project_id, preference_order
+#
+# # Foreign Keys
+#
+# # Optional foreign keys for department, program, and specialization
+#
+# # Relationships
+#
+# # Relationship with Student: one preference belongs to one student
+#
+# # Relationship with Project: one preference belongs to one project
+#
+# Assignment Result:
+# # Primary Key
+#
+# # ID column: primary key, unique, integer
+#
+# # Foreign Keys
+#
+# # Student ID: non-nullable
+#
+# # Optional foreign keys for department, program, and specialization
+#
+# # Relationships
+#
+# # Relationship with Student: one assignment result belongs to one student
+#
+# Student Grades:
+# # Primary Key
+#
+# # ID column: primary key, unique, integer
+#
+# # Foreign Keys
+#
+# # Student ID: non-nullable
+#
+# # Attributes
+#
+# # Subject code: string
+#
+# # Semester: string
+#
+# # Credit hours: integer
+#
+# # Points: float
+#
+# # Relationships
+#
+# # Relationship with Student: one grade belongs to one student
+#
+# Project:
+# # Primary Key
+#
+# # ID column: primary key, unique, integer
+#
+# # Attributes
+#
+# # Name column: string, not necessarily unique
+#
+# # Excel file name: string
+#
+# # Status column: string, indicates if the project is active, completed, etc.
+#
+# # Status column: string, indicates if the project is active, completed, etc.
+#
+# # Directory column: string, indicates if the project is department, program, specialization.
+#
+# # Created by column: integer, references an admin
+#
+# # Created at column: datetime
+#
+# # Relationships
+#
+# # Relationship with AssignmentResult: one project can have many assignment results
+#
+# # Relationship with Notification: one project can have many notifications
+#
+# Notification:
+# # Primary Key
+#
+# # ID column: primary key, unique, integer
+#
+# # Attributes
+#
+# # Recipient email: string
+#
+# # Message type: string, indicates the type of recipient (e.g., admin, super admin)
+#
+# # Status: string, indicates if the notification has been sent
+#
+# # Sent at: datetime, indicates when the notification was sent
+#

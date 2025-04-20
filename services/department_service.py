@@ -1,44 +1,62 @@
 # services/department_service.py
-
 from sqlalchemy.orm import Session
+
 from database.models import Department
+
 
 class DepartmentService:
     def __init__(self, session: Session):
         self.session = session
 
-    def create(self, name, faculty_id, student_capacity):
-        new_department = Department(name=name, faculty_id=faculty_id, student_capacity=student_capacity)
+    def create(self, name, student_capacity, faculty_id):
+        new_department = Department(
+            name=name,
+            student_capacity=student_capacity,
+            faculty_id=faculty_id
+        )
         self.session.add(new_department)
         self.session.commit()
         return new_department
 
     def get(self, department_id):
-        return self.session.query(Department).get(department_id)
+        return self.session.get(Department, department_id)
 
-    def update(self, department_id, name=None, faculty_id=None, student_capacity=None):
+    def get_all(self):
+        return self.session.query(Department).all()
+
+    def update(self, department_id, name=None, student_capacity=None, faculty_id=None):
         department = self.get(department_id)
-        if department:
-            if name is not None:
-                department.name = name
-            if faculty_id is not None:
-                department.faculty_id = faculty_id
-            if student_capacity is not None:
-                department.student_capacity = student_capacity
+        if not department:
+            print("Department not found.")
+            return None
+
+        updated = False
+
+        if name is not None:
+            department.name = name
+            updated = True
+        if student_capacity is not None:
+            department.student_capacity = student_capacity
+            updated = True
+        if faculty_id is not None:
+            department.faculty_id = faculty_id
+            updated = True
+
+        if updated:
             self.session.commit()
+            print("Department updated successfully.")
+        else:
+            print("Nothing to update.")
+
         return department
 
     def delete(self, department_id):
         department = self.get(department_id)
-        if department:
-            self.session.delete(department)
-            self.session.commit()
-        return department
+        if not department:
+            print("Department not found.")
+            return
 
-    def search(self, department_id=None, name=None):
-        query = self.session.query(Department)
-        if department_id is not None:
-            query = query.filter(Department.id == department_id)
-        if name is not None:
-            query = query.filter(Department.name.ilike(f'%{name}%'))
-        return query.all()
+        self.session.delete(department)
+        self.session.commit()
+        print("Department deleted successfully.")
+        return department
