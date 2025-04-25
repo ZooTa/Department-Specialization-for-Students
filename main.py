@@ -1,8 +1,8 @@
 
-from database.database_config import get_session, init_db
-
-from services.faculty_service import FacultyService
-from services.department_service import DepartmentService
+# from database.database_config import get_session, init_global_db, init_project_db
+#
+# from services.faculty_service import FacultyService
+# from services.department_service import DepartmentService
 
 
 # Initialize the database
@@ -58,6 +58,77 @@ from services.department_service import DepartmentService
 #     print("All departments:")
 #     for dept in departments:
 #         print("id:", dept.id, "name:", dept.name, "faculty_name:", dept.faculty.name)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+from database.database_config import get_session, init_global_db, init_project_db
+
+from services.faculty_service import FacultyService
+from services.department_service import DepartmentService
+# Initialize the database
+
+init_global_db()
+
+
+# Create a session
+with get_session("global") as session:
+
+    # Initialize the FacultyService
+    faculty = FacultyService(session)
+
+
+    faculty.delete(1)
+
+    # Create a new faculty
+
+    # faculty_sci = faculty.create("Science")
+    # faculty_cs = faculty.create("Computer Science")
+    # faculty_eng = faculty.create("Engineering")
+    # faculty_med = faculty.create("Medicine")
+
+    # # Update a faculty
+    # fac2 = faculty.update(3, "Midicine")
+    #
+    # department_service = DepartmentService(session)
+    #
+    # # Create a new department
+    #
+    # dept1 = department_service.create("Mathematics", 300, 1)
+    # dept2 = department_service.create("Chemistry", 300, 1)
+
+
+
+
+
 
 
 

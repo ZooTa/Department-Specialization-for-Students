@@ -1,3 +1,9 @@
 from sqlalchemy.orm import declarative_base
 
-Base = declarative_base() # base Class to inherite from
+# base Class to inherite from
+
+# Global base
+GlobalBase = declarative_base()
+
+# Project base
+ProjectBase = declarative_base()

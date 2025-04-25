@@ -1,27 +1,22 @@
 # services/student_service.py
 
 from sqlalchemy.orm import Session
-from database.models import Student, Person
+
+from database.models import Student
+
 
 class StudentService:
     def __init__(self, session: Session):
         self.session = session
 
     def create(self, first_name, last_name, ssn, email, phone_number, gender, gpa, eligibility_rank, passed_subjects):
-        # Create a new Person
-        new_person = Person(
+        # Create a new Student linked to the Person
+        new_student = Student(
             first_name=first_name,
             last_name=last_name,
             ssn=ssn,
             email=email,
-            phone_number=phone_number
-        )
-        self.session.add(new_person)
-        self.session.flush()  # Flush to get the new_person.id
-
-        # Create a new Student linked to the Person
-        new_student = Student(
-            person_id=new_person.id,
+            phone_number=phone_number,
             gender=gender,
             gpa=gpa,
             eligibility_rank=eligibility_rank,
@@ -45,24 +40,22 @@ class StudentService:
 
         updated = False
 
-        # Update Person details
+        # Update Student details
         if first_name is not None:
-            student.person.first_name = first_name
+            student.first_name = first_name
             updated = True
         if last_name is not None:
-            student.person.last_name = last_name
+            student.last_name = last_name
             updated = True
         if ssn is not None:
-            student.person.ssn = ssn
+            student.ssn = ssn
             updated = True
         if email is not None:
-            student.person.email = email
+            student.email = email
             updated = True
         if phone_number is not None:
-            student.person.phone_number = phone_number
+            student.phone_number = phone_number
             updated = True
-
-        # Update Student details
         if gender is not None:
             student.gender = gender
             updated = True

@@ -2,9 +2,12 @@ from sqlalchemy import Column, Integer, String, Text, ForeignKey, Float, DateTim
 from sqlalchemy.orm import relationship
 from datetime import datetime
 
-from .base_models import Base
+from .base_models import GlobalBase, ProjectBase
 
-class Faculty(Base):
+
+# Global database models
+
+class Faculty(GlobalBase):
     __tablename__ = 'faculty'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
@@ -12,7 +15,7 @@ class Faculty(Base):
     departments = relationship('Department', back_populates='faculty', cascade='all, delete-orphan')
 
 
-class Department(Base):
+class Department(GlobalBase):
     __tablename__ = 'department'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
@@ -23,12 +26,12 @@ class Department(Base):
     programs = relationship('Program', back_populates='department', cascade='all, delete-orphan')
     specializations = relationship('Specialization', back_populates='department', cascade='all, delete-orphan')
 
-    department_heads = relationship('DepartmentHead', back_populates='department')
+    # department_heads = relationship('DepartmentHead', back_populates='department')
     # assignment_results = relationship('AssignmentResult', back_populates='department')
     # preferences = relationship('Preferences', back_populates='department')
 
 
-class Program(Base):
+class Program(GlobalBase):
     __tablename__ = 'program'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
@@ -44,7 +47,7 @@ class Program(Base):
     # preferences = relationship('Preferences', back_populates='program')
 
 
-class Specialization(Base):
+class Specialization(GlobalBase):
     __tablename__ = 'specialization'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
@@ -61,10 +64,7 @@ class Specialization(Base):
     # preferences = relationship('Preferences', back_populates='specialization')
 
 
-
-
-
-class Person(Base):
+class Person(GlobalBase):
     __tablename__ = 'person'
 
     id = Column(Integer, primary_key=True)
@@ -73,11 +73,6 @@ class Person(Base):
     ssn = Column(String, unique=True, nullable=False)
     email = Column(String, nullable=False)
     phone_number = Column(String, nullable=False)
-
-    student = relationship('Student', back_populates='person',
-                           uselist=False,
-                           cascade="all, delete-orphan",
-                           single_parent=True)
 
     admin = relationship('Admin', back_populates='person',
                          uselist=False,
@@ -90,21 +85,20 @@ class Person(Base):
                                    single_parent=True)
 
 
-class Student(Base):
-    __tablename__ = 'student'
+class DepartmentHead(GlobalBase):
+    __tablename__ = 'department_head'
 
     person_id = Column(Integer, ForeignKey('person.id', ondelete="CASCADE"), primary_key=True)
-    gender = Column(String, nullable=False)
-    gpa = Column(Float, nullable=False)
-    eligibility_rank = Column(Integer, nullable=False)
-    passed_subjects = Column(Text, nullable=False)
+    department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
 
-    person = relationship('Person', back_populates='student',
-                          cascade="all, delete",
+    person = relationship('Person', back_populates='department_head',
+                          cascade="all, delete",  # delete person if head is deleted
                           single_parent=True)
 
+    department = relationship('Department', back_populates='department_heads')
 
-class Admin(Base):
+
+class Admin(GlobalBase):
     __tablename__ = 'admin'
 
     person_id = Column(Integer, ForeignKey('person.id', ondelete="CASCADE"), primary_key=True)
@@ -121,63 +115,89 @@ class Admin(Base):
     action_logs = relationship('ActionLog', back_populates='admin')
 
 
-class DepartmentHead(Base):
-    __tablename__ = 'department_head'
-
-    person_id = Column(Integer, ForeignKey('person.id', ondelete="CASCADE"), primary_key=True)
-    department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
-
-    person = relationship('Person', back_populates='department_head',
-                          cascade="all, delete",  # delete person if head is deleted
-                          single_parent=True)
-
-    department = relationship('Department', back_populates='department_heads')
-
-
-
-
+# class ActionLog(GlobalBase):
+#     __tablename__ = 'action_log'
+#     id = Column(Integer, primary_key=True)
+#     user_id = Column(Integer, ForeignKey('admin.person_id'), nullable=False)
+#     action_name = Column(String, nullable=False)
+#     action_details = Column(Text, nullable=False)
+#     timestamp = Column(DateTime, default=datetime.utcnow, nullable=False)
 #
-# class StudentGrades(Base):
-#     __tablename__ = 'student_grades'
+#     admin = relationship('Admin', back_populates='action_logs')
+
+
+class Project(GlobalBase):
+    __tablename__ = 'project'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False, unique=True)
+    type = Column(String, nullable=False)  # 'department' or 'program' or 'specialization'
+    excel_file_name = Column(String, nullable=False)
+    status = Column(String, default='Pending', nullable=False)
+    stage = Column(String, default='Initialized', nullable=False)
+    directory = Column(String, nullable=False)  # path to project folder
+    created_by = Column(Integer, ForeignKey('admin.person_id'), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+    creator = relationship('Admin', back_populates='projects')
+    action_logs = relationship('ActionLog', back_populates='admin')
+
+
+# Project database models
+
+class Student(ProjectBase):
+    __tablename__ = 'student'
+
+    id = Column(Integer, primary_key=True)
+    first_name = Column(String, nullable=False)
+    last_name = Column(String, nullable=False)
+    ssn = Column(String, unique=True, nullable=False)
+    email = Column(String, nullable=False)
+    phone_number = Column(String, nullable=False)
+    gender = Column(String, nullable=False)
+    gpa = Column(Float, nullable=False)
+    eligibility_rank = Column(Integer, nullable=False)
+    passed_subjects = Column(Text, nullable=False)
+
+    student_grades = relationship('StudentGrades', back_populates='student', cascade='all, delete-orphan')
+
+
+class StudentGrades(ProjectBase):
+    __tablename__ = 'student_grades'
+    id = Column(Integer,primary_key=True)  # Unique ID for each grade record عشان ممكن تسقط ف تعيد المادة ف الكود هيظهر مرتين
+    subject_code = Column(String, nullable=False)
+    semester = Column(String, nullable=False)
+    points = Column(Float, nullable=False)
+    credit_hours = Column(Integer, nullable=False)
+    student_id = Column(Integer, ForeignKey('student.id'))
+
+    student = relationship('Student', back_populates='student_grades')
+
+
+class ProjectInfo(ProjectBase):
+    __tablename__ = 'project_info'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    type = Column(String)  # or Enum
+    created_at = Column(DateTime)
+
+# #
+# class Preferences(ProjectBase):
+#     __tablename__ = 'preferences'
 #     student_id = Column(Integer, ForeignKey('student.person_id'), primary_key=True)
-#     subject_code = Column(String, primary_key=True)
-#     semester = Column(String, primary_key=True)
-#     points = Column(Float, nullable=False)
-#     credit_hours = Column(Float, nullable=False)
+#     project_id = Column(Integer, ForeignKey('project.id'), primary_key=True)
+#     department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
+#     program_id = Column(Integer, ForeignKey('program.id'), nullable=False)
+#     specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=False)
+#     preference_order = Column(Integer, primary_key=True)
 #
-#     student = relationship('Student', back_populates='student_grades')
+#     student = relationship('Student', back_populates='preferences')
+#     project = relationship('Project', back_populates='preferences')
+#     department = relationship('Department', back_populates='preferences')
+#     program = relationship('Program', back_populates='preferences')
+#     specialization = relationship('Specialization', back_populates='preferences')
 #
-#
-# class Project(Base):
-#     __tablename__ = 'project'
-#     id = Column(Integer, primary_key=True)
-#     name = Column(String, nullable=False)
-#     excel_file_name = Column(String, nullable=False)
-#     status = Column(String, nullable=False)
-#     stage = Column(String, nullable=False)
-#     directory = Column(String, nullable=False)
-#     created_by = Column(Integer, ForeignKey('admin.person_id'), nullable=False)
-#     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-#
-#     creator = relationship('Admin', back_populates='projects')
-#     notifications = relationship('Notification', back_populates='project')
-#     assignment_results = relationship('AssignmentResult', back_populates='project')
-#     preferences = relationship('Preferences', back_populates='project')
-#
-#
-# class Notification(Base):
-#     __tablename__ = 'notification'
-#     id = Column(Integer, primary_key=True)
-#     project_id = Column(Integer, ForeignKey('project.id'), nullable=False)
-#     recipient_email = Column(String, nullable=False)
-#     message_type = Column(String, nullable=False)
-#     status = Column(String, nullable=False)
-#     sent_at = Column(DateTime, nullable=False)
-#
-#     project = relationship('Project', back_populates='notifications')
-#
-#
-# class AssignmentResult(Base):
+# class AssignmentResult(ProjectBase):
 #     __tablename__ = 'assignment_result'
 #     id = Column(Integer, primary_key=True)
 #     project_id = Column(Integer, ForeignKey('project.id'), nullable=False)
@@ -196,47 +216,21 @@ class DepartmentHead(Base):
 #     specialization = relationship('Specialization', back_populates='assignment_results')
 #
 #
-# class Preferences(Base):
-#     __tablename__ = 'preferences'
-#     student_id = Column(Integer, ForeignKey('student.person_id'), primary_key=True)
-#     project_id = Column(Integer, ForeignKey('project.id'), primary_key=True)
-#     department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
-#     program_id = Column(Integer, ForeignKey('program.id'), nullable=False)
-#     specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=False)
-#     preference_order = Column(Integer, primary_key=True)
-#
-#     student = relationship('Student', back_populates='preferences')
-#     project = relationship('Project', back_populates='preferences')
-#     department = relationship('Department', back_populates='preferences')
-#     program = relationship('Program', back_populates='preferences')
-#     specialization = relationship('Specialization', back_populates='preferences')
 #
 #
-# class ActionLog(Base):
-#     __tablename__ = 'action_log'
+#
+#
+# class Notification(Base):
+#     __tablename__ = 'notification'
 #     id = Column(Integer, primary_key=True)
-#     user_id = Column(Integer, ForeignKey('admin.person_id'), nullable=False)
-#     action_name = Column(String, nullable=False)
-#     action_details = Column(Text, nullable=False)
-#     timestamp = Column(DateTime, default=datetime.utcnow, nullable=False)
+#     project_id = Column(Integer, ForeignKey('project.id'), nullable=False)
+#     recipient_email = Column(String, nullable=False)
+#     message_type = Column(String, nullable=False)
+#     status = Column(String, nullable=False)
+#     sent_at = Column(DateTime, nullable=False)
 #
-#     admin = relationship('Admin', back_populates='action_logs')
+#     project = relationship('Project', back_populates='notifications')
 #
-#
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 # class AssignmentResult(Base):
