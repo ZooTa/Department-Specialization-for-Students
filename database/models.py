@@ -1,6 +1,7 @@
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, Float, DateTime
-from sqlalchemy.orm import relationship
 from datetime import datetime
+
+from sqlalchemy import Column, Integer, String, Text, ForeignKey, Float, DateTime, UniqueConstraint
+from sqlalchemy.orm import relationship
 
 from .base_models import GlobalBase, ProjectBase
 
@@ -140,7 +141,7 @@ class Project(GlobalBase):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     creator = relationship('Admin', back_populates='projects')
-    action_logs = relationship('ActionLog', back_populates='admin')
+    # action_logs = relationship('ActionLog', back_populates='admin')
 
 
 # Project database models
@@ -160,11 +161,14 @@ class Student(ProjectBase):
     passed_subjects = Column(Text, nullable=False)
 
     student_grades = relationship('StudentGrades', back_populates='student', cascade='all, delete-orphan')
+    preferences = relationship('Preferences', back_populates='student', cascade='all, delete-orphan')
+    assignment_results = relationship('StudentAssignment', back_populates='student', cascade='all, delete-orphan')
 
 
 class StudentGrades(ProjectBase):
     __tablename__ = 'student_grades'
-    id = Column(Integer,primary_key=True)  # Unique ID for each grade record عشان ممكن تسقط ف تعيد المادة ف الكود هيظهر مرتين
+    id = Column(Integer,
+                primary_key=True)  # Unique ID for each grade record عشان ممكن تسقط ف تعيد المادة ف الكود هيظهر مرتين
     subject_code = Column(String, nullable=False)
     semester = Column(String, nullable=False)
     points = Column(Float, nullable=False)
@@ -178,44 +182,54 @@ class ProjectInfo(ProjectBase):
     __tablename__ = 'project_info'
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    type = Column(String)  # or Enum
+    type = Column(String)
     created_at = Column(DateTime)
+    preference_count = Column(Integer, nullable=True)
 
-# #
-# class Preferences(ProjectBase):
-#     __tablename__ = 'preferences'
-#     student_id = Column(Integer, ForeignKey('student.person_id'), primary_key=True)
-#     project_id = Column(Integer, ForeignKey('project.id'), primary_key=True)
-#     department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
-#     program_id = Column(Integer, ForeignKey('program.id'), nullable=False)
-#     specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=False)
-#     preference_order = Column(Integer, primary_key=True)
-#
-#     student = relationship('Student', back_populates='preferences')
-#     project = relationship('Project', back_populates='preferences')
-#     department = relationship('Department', back_populates='preferences')
-#     program = relationship('Program', back_populates='preferences')
-#     specialization = relationship('Specialization', back_populates='preferences')
-#
-# class AssignmentResult(ProjectBase):
-#     __tablename__ = 'assignment_result'
-#     id = Column(Integer, primary_key=True)
-#     project_id = Column(Integer, ForeignKey('project.id'), nullable=False)
-#     student_ssn = Column(String, ForeignKey('student.person_id'), nullable=False)
-#     department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
-#     program_id = Column(Integer, ForeignKey('program.id'), nullable=False)
-#     specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=False)
-#     gpa = Column(Float, nullable=False)
-#     assignment_date = Column(DateTime, nullable=False)
-#     status = Column(String, nullable=False)
-#
-#     project = relationship('Project', back_populates='assignment_results')
-#     student = relationship('Student', back_populates='assignment_results')
-#     department = relationship('Department', back_populates='assignment_results')
-#     program = relationship('Program', back_populates='assignment_results')
-#     specialization = relationship('Specialization', back_populates='assignment_results')
-#
-#
+    preferences = relationship('Preferences', back_populates='project')
+    preferences = relationship('Preferences', back_populates='project', cascade='all, delete-orphan')
+    assignment_results = relationship('StudentAssignment', back_populates='project', cascade='all, delete-orphan')
+
+
+class Preferences(ProjectBase):
+    __tablename__ = 'preferences'
+    id = Column(Integer, primary_key=True)
+    student_id = Column(Integer, ForeignKey('student.id'))
+    project_id = Column(Integer, ForeignKey('project_info.id'))
+    preference_order = Column(Integer)
+
+    # Only one of these will be used, based on project type
+    department_id = Column(Integer, nullable=True)
+    program_id = Column(Integer, nullable=True)
+    specialization_id = Column(Integer, nullable=True)
+
+    student = relationship('Student', back_populates='preferences')
+    project = relationship('ProjectInfo', back_populates='preferences')
+
+
+class StudentAssignment(ProjectBase):
+    __tablename__ = 'assignment_result'
+
+    __table_args__ = (
+        UniqueConstraint('student_id', 'project_id', name='uix_student_project'),
+    )
+
+    id = Column(Integer, primary_key=True)
+    project_id = Column(Integer, ForeignKey('project_info.id'), nullable=False)
+    student_id = Column(Integer, ForeignKey('student.id'), nullable=False)
+
+    # One of these based on project type
+    department_id = Column(Integer, nullable=True)
+    program_id = Column(Integer, nullable=True)
+    specialization_id = Column(Integer, nullable=True)
+
+    gpa = Column(Float, nullable=False)
+    assignment_date = Column(DateTime, nullable=False)
+    status = Column(String, nullable=False)  # e.g., "assigned", "pending", "failed"
+
+    project = relationship('ProjectInfo', back_populates='assignment_results')
+    student = relationship('Student', back_populates='assignment_results')
+
 #
 #
 #
@@ -231,41 +245,6 @@ class ProjectInfo(ProjectBase):
 #
 #     project = relationship('Project', back_populates='notifications')
 #
-
-
-# class AssignmentResult(Base):
-#     __tablename__ = 'assignment_result'
-#     id = Column(Integer, primary_key=True)
-#     project_id = Column(Integer, ForeignKey('project.id'), nullable=False)
-#     student_ssn = Column(String, ForeignKey('student.person_id'), nullable=False)
-#     department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
-#     program_id = Column(Integer, ForeignKey('program.id'), nullable=False)
-#     specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=False)
-#     gpa = Column(Float)
-#     assignment_date = Column(DateTime)
-#     status = Column(String)
-#
-#     project = relationship('Project', back_populates='assignment_results')
-#     student = relationship('Student', back_populates='assignment_results')
-#     department = relationship('Department', back_populates='assignment_results')
-#     program = relationship('Program', back_populates='assignment_results')
-#     specialization = relationship('Specialization', back_populates='assignment_results')
-
-
-# class Preferences(Base):
-#     __tablename__ = 'preferences'
-#     student_id = Column(Integer, ForeignKey('student.person_id'), primary_key=True)
-#     project_id = Column(Integer, ForeignKey('project.id'), primary_key=True)
-#     department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
-#     program_id = Column(Integer, ForeignKey('program.id'), nullable=False)
-#     specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=False)
-#     preference_order = Column(Integer, primary_key=True)
-#
-#     student = relationship('Student', back_populates='preferences')
-#     project = relationship('Project', back_populates='preferences')
-#     department = relationship('Department', back_populates='preferences')
-#     program = relationship('Program', back_populates='preferences')
-#     specialization = relationship('Specialization', back_populates='preferences')
 
 
 # class ActionLog(Base):
