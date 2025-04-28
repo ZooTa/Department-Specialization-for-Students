@@ -97,6 +97,7 @@ from services.department_service import DepartmentService
 # Initialize the database
 
 init_global_db()
+init_project_db("Class 2025")
 
 
 # Create a session
@@ -106,7 +107,7 @@ with get_session("global") as session:
     faculty = FacultyService(session)
 
 
-    faculty.delete(1)
+    # faculty.delete(1)
 
     # Create a new faculty
 
@@ -125,7 +126,12 @@ with get_session("global") as session:
     # dept1 = department_service.create("Mathematics", 300, 1)
     # dept2 = department_service.create("Chemistry", 300, 1)
 
+from services.student_service import StudentService
 
+with get_session("project", "Class 2025") as session:
+
+    # initialize student service
+    student_service = StudentService(session)
 
 
 
