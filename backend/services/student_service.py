@@ -90,9 +90,6 @@ class StudentService:
 
 
     def get_mean_gpa(self):
-        """
-        Calculate the mean GPA of all students.
-        """
         students = self.get_all()
         if not students:
             return 0.00
