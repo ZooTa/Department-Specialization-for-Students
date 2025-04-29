@@ -87,3 +87,18 @@ class StudentService:
         self.session.delete(student)
         self.session.commit()
         return student
+
+
+    def get_mean_gpa(self):
+        """
+        Calculate the mean GPA of all students.
+        """
+        students = self.get_all()
+        if not students:
+            return 0.00
+
+        total_gpa = sum(student.gpa for student in students)
+        mean_gpa = total_gpa / len(students)
+        return mean_gpa
+
+

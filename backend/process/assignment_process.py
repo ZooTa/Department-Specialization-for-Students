@@ -1,18 +1,14 @@
 # process/assignment_process.py
 
-from services.student_service import StudentService
-from services.program_service import ProgramService
-from services.specialization_service import SpecializationService
-from services.department_service import DepartmentService
-from services.preferences_service import PreferencesService
-
 class AssignmentProcess:
-    def __init__(self, student_service, program_service, specialization_service, department_service, preferences_service):
+
+
+    def __init__(self, student_service, program_service, specialization_service, department_service):
         self.student_service = student_service
         self.program_service = program_service
         self.specialization_service = specialization_service
         self.department_service = department_service
-        self.preferences_service = preferences_service
+
 
     def assign_students(self, project_type):
         students = self.student_service.get_all_students()

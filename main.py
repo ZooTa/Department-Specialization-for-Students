@@ -1,4 +1,7 @@
 
+
+
+
 # from database.database_config import get_session, init_global_db, init_project_db
 #
 # from services.faculty_service import FacultyService
@@ -88,12 +91,10 @@
 
 
 
-
-
 from database.database_config import get_session, init_global_db, init_project_db
 
-from services.faculty_service import FacultyService
-from services.department_service import DepartmentService
+from backend.services.faculty_service import FacultyService
+
 # Initialize the database
 
 init_global_db()
@@ -126,12 +127,7 @@ with get_session("global") as session:
     # dept1 = department_service.create("Mathematics", 300, 1)
     # dept2 = department_service.create("Chemistry", 300, 1)
 
-from services.student_service import StudentService
 
-with get_session("project", "Class 2025") as session:
-
-    # initialize student service
-    student_service = StudentService(session)
 
 
 

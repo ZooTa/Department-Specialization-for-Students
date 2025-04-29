@@ -37,12 +37,15 @@ class Program(GlobalBase):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
-    subjects_required = Column(Text, nullable=False)
     gpa_threshold = Column(Float, nullable=False)
     student_capacity = Column(Integer, nullable=False)
 
+
+
     department = relationship('Department', back_populates='programs')
+
     specializations = relationship('Specialization', back_populates='program', cascade='all, delete-orphan')
+    subjects_required = relationship('RequiredSubject', back_populates='program', cascade='all, delete-orphan')
 
     # assignment_results = relationship('AssignmentResult', back_populates='program')
     # preferences = relationship('Preferences', back_populates='program')
@@ -52,7 +55,6 @@ class Specialization(GlobalBase):
     __tablename__ = 'specialization'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    subjects_required = Column(Text, nullable=False)
     gpa_threshold = Column(Float, nullable=False)
     student_capacity = Column(Integer, nullable=False)
     program_id = Column(Integer, ForeignKey('program.id'), nullable=False)
@@ -61,9 +63,21 @@ class Specialization(GlobalBase):
     department = relationship('Department', back_populates='specializations')
     program = relationship('Program', back_populates='specializations')
 
+    subjects_required = relationship('RequiredSubject', back_populates='specialization', cascade='all, delete-orphan')
+
     # assignment_results = relationship('AssignmentResult', back_populates='specialization')
     # preferences = relationship('Preferences', back_populates='specialization')
 
+
+
+class RequiredSubject (GlobalBase):
+    __tablename__ = 'subjects_required'
+    id = Column(Integer, primary_key=True)
+    code = Column(String, nullable=False)
+    min_grade = Column(Integer, nullable=False)
+
+    program = relationship('Program', back_populates='subjects_required')
+    specialization = relationship('Specialization', back_populates='subjects_required')
 
 class Person(GlobalBase):
     __tablename__ = 'person'
@@ -134,11 +148,9 @@ class Project(GlobalBase):
     name = Column(String, nullable=False, unique=True)
     type = Column(String, nullable=False)  # 'department' or 'program' or 'specialization'
     excel_file_name = Column(String, nullable=False)
-    status = Column(String, default='Pending', nullable=False)
-    stage = Column(String, default='Initialized', nullable=False)
     directory = Column(String, nullable=False)  # path to project folder
-    created_by = Column(Integer, ForeignKey('admin.person_id'), nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+    # created_by = Column(Integer, ForeignKey('admin.person_id'), nullable=False)
+    # created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     creator = relationship('Admin', back_populates='projects')
     # action_logs = relationship('ActionLog', back_populates='admin')
@@ -183,10 +195,10 @@ class ProjectInfo(ProjectBase):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     type = Column(String)
-    created_at = Column(DateTime)
-    preference_count = Column(Integer, nullable=True)
+    # created_at = Column(DateTime)
+    # preference_count = Column(Integer, nullable=True)
 
-    preferences = relationship('Preferences', back_populates='project')
+    preferences = relationship('Preferences', back_populates='project', cascade='all, delete-orphan')
     preferences = relationship('Preferences', back_populates='project', cascade='all, delete-orphan')
     assignment_results = relationship('StudentAssignment', back_populates='project', cascade='all, delete-orphan')
 
@@ -194,6 +206,7 @@ class ProjectInfo(ProjectBase):
 class Preferences(ProjectBase):
     __tablename__ = 'preferences'
     id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
     student_id = Column(Integer, ForeignKey('student.id'))
     project_id = Column(Integer, ForeignKey('project_info.id'))
     preference_order = Column(Integer)
@@ -215,7 +228,7 @@ class StudentAssignment(ProjectBase):
     )
 
     id = Column(Integer, primary_key=True)
-    project_id = Column(Integer, ForeignKey('project_info.id'), nullable=False)
+    project_id = Column(Integer, ForeignKey('project_info.id'), nullable=False) # Foreign key to project and if it not important delete
     student_id = Column(Integer, ForeignKey('student.id'), nullable=False)
 
     # One of these based on project type
@@ -223,7 +236,6 @@ class StudentAssignment(ProjectBase):
     program_id = Column(Integer, nullable=True)
     specialization_id = Column(Integer, nullable=True)
 
-    gpa = Column(Float, nullable=False)
     assignment_date = Column(DateTime, nullable=False)
     status = Column(String, nullable=False)  # e.g., "assigned", "pending", "failed"
 
