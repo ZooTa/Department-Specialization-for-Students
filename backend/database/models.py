@@ -167,7 +167,7 @@ class Project(ProjectBase):
 class Student(ProjectBase):
     __tablename__ = 'student'
 
-    id = Column(Integer, primary_key=True)
+    id_num = Column(Integer, primary_key=True, autoincrement=False, nullable=False)
     name = Column(String, nullable=False)
     email = Column(String, nullable=False)
     gpa = Column(Float, nullable=False, default=0.00)
@@ -189,7 +189,7 @@ class StudentGrades(ProjectBase):
     semester = Column(String, nullable=False)
     points = Column(Float, nullable=False)
     credit_hours = Column(Integer, nullable=False)
-    student_id = Column(Integer, ForeignKey('student.id'))
+    student_id_num = Column(Integer, ForeignKey('student.id_num'))
 
     student = relationship('Student', back_populates='student_grades')
 
@@ -211,7 +211,7 @@ class Preferences(ProjectBase):
     __tablename__ = 'preferences'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    student_id = Column(Integer, ForeignKey('student.id'))
+    student_id_num = Column(Integer, ForeignKey('student.id_num'))
     project_id = Column(Integer, ForeignKey('project_info.id'))
     preference_order = Column(Integer)
 
@@ -228,13 +228,13 @@ class StudentAssignment(ProjectBase):
     __tablename__ = 'assignment_result'
 
     __table_args__ = (
-        UniqueConstraint('student_id', 'project_id', name='uix_student_project'),
+        UniqueConstraint('student_id_num', 'project_id', name='uix_student_project'),
     )
 
     id = Column(Integer, primary_key=True)
     project_id = Column(Integer, ForeignKey('project_info.id'),
                         nullable=False)  # Foreign key to project and if it not important delete
-    student_id = Column(Integer, ForeignKey('student.id'), nullable=False)
+    student_id_num = Column(Integer, ForeignKey('student.id_num'), nullable=False)
 
     # One of these based on project type
     department_id = Column(Integer, nullable=True)
