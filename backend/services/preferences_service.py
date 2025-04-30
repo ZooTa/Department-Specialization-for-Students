@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from database.models import Preferences
+from ..database.models import Preferences
 
 
 class PreferencesService:

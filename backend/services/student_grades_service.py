@@ -1,7 +1,7 @@
 # services/student_grades_service.py
 
 from sqlalchemy.orm import Session
-from database.models import StudentGrades
+from ..database.models import StudentGrades
 
 class StudentGradesService:
     def __init__(self, session: Session):

@@ -1,7 +1,7 @@
 # services/department_head_service.py
 
 from sqlalchemy.orm import Session
-from database.models import DepartmentHead, Person
+from ..database.models import DepartmentHead, Person
 
 class DepartmentHeadService:
     def __init__(self, session: Session):

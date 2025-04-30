@@ -1,33 +1,24 @@
 # services/admin_service.py
 
+import bcrypt
 from sqlalchemy.orm import Session
-from database.models import Admin, Person
-from datetime import datetime
+
+from ..database.models import Admin
+
 
 class AdminService:
     def __init__(self, session: Session):
         self.session = session
 
-    def create(self, first_name, last_name, ssn, email, phone_number, username, password, role):
-        # Create a new Person
-        new_person = Person(
-            first_name=first_name,
-            last_name=last_name,
-            ssn=ssn,
-            email=email,
-            phone_number=phone_number
-        )
-        self.session.add(new_person)
-        self.session.flush()  # Flush to get the new_person.id
-
+    def create(self, name, username, password, role):
         # Create a new Admin linked to the Person
         new_admin = Admin(
-            person_id=new_person.id,
+            name=name,
             username=username,
-            password=password,
-            role=role,
-            created_at=datetime.utcnow()
+            role=role
+            # created_at=datetime.utcnow()
         )
+        new_admin.set_password(password)
         self.session.add(new_admin)
         self.session.commit()
         return new_admin
@@ -38,7 +29,8 @@ class AdminService:
     def get_all(self):
         return self.session.query(Admin).all()
 
-    def update(self, admin_id, first_name=None, last_name=None, ssn=None, email=None, phone_number=None, username=None, password=None, role=None):
+    def update(self, admin_id, name=None, last_name=None, ssn=None, email=None, phone_number=None, username=None,
+               password=None, role=None):
         admin = self.get(admin_id)
         if not admin:
             print("Admin not found.")
@@ -46,24 +38,10 @@ class AdminService:
 
         updated = False
 
-        # Update Person details
-        if first_name is not None:
-            admin.person.first_name = first_name
-            updated = True
-        if last_name is not None:
-            admin.person.last_name = last_name
-            updated = True
-        if ssn is not None:
-            admin.person.ssn = ssn
-            updated = True
-        if email is not None:
-            admin.person.email = email
-            updated = True
-        if phone_number is not None:
-            admin.person.phone_number = phone_number
-            updated = True
-
         # Update Admin details
+        if name is not None:
+            admin.name = name
+            updated = True
         if username is not None:
             admin.username = username
             updated = True
@@ -92,3 +70,11 @@ class AdminService:
         self.session.delete(admin)
         self.session.commit()
         return admin
+
+    def login(self, username, password):
+        admin = self.session.query(Admin).filter_by(username=username).first()
+        if admin and admin.check_password(password):
+            print("Login successful.")
+            return admin.role
+        print("Invalid username or password.")
+        return None

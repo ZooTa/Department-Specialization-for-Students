@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from database.models import StudentAssignment
+from ..database.models import StudentAssignment
 
 
 class StudentAssignmentService:

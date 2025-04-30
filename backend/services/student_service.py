@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm import Session
 
-from database.models import Student
+from ..database.models import Student
 
 
 class StudentService:
@@ -93,7 +93,6 @@ class StudentService:
         students = self.get_all()
         if not students:
             return 0.00
-
         total_gpa = sum(student.gpa for student in students)
         mean_gpa = total_gpa / len(students)
         return mean_gpa

@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm import Session
 
-from database.models import Specialization
+from ..database.models import Specialization
 
 
 class SpecializationService:

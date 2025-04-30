@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm import Session
 
-from database.models import Faculty
+from ..database.models import Faculty
 
 
 class FacultyService:

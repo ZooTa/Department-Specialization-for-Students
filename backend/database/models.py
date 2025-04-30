@@ -1,14 +1,38 @@
-from datetime import datetime
-
-from sqlalchemy import Column, Integer, String, Text, ForeignKey, Float, DateTime, UniqueConstraint
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime, UniqueConstraint
 from sqlalchemy.orm import relationship
+import bcrypt
 
-from .base_models import GlobalBase, ProjectBase
+from .base_models import UserBase, ProjectBase
 
 
-# Global database models
+# User database models
 
-class Faculty(GlobalBase):
+class Admin(UserBase):
+    __tablename__ = 'admin'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+    # ssn = Column(String, unique=True, nullable=False)
+    # email = Column(String, nullable=False)
+    # phone_number = Column(String, nullable=False)
+    username = Column(String, nullable=False)
+    password = Column(String, nullable=False)
+    role = Column(String, nullable=False)
+    # created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+
+    # data = relationship('Project', back_populates='creator')
+    # action_logs = relationship('ActionLog', back_populates='admin')
+
+    def set_password(self, plain_password):
+        salt = bcrypt.gensalt()
+        self.password = bcrypt.hashpw(plain_password.encode('utf-8'), salt).decode('utf-8')
+
+    def check_password(self, plain_password):
+        return bcrypt.checkpw(plain_password.encode('utf-8'), self.password.encode('utf-8'))
+
+
+# Project database models
+class Faculty(ProjectBase):
     __tablename__ = 'faculty'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
@@ -16,31 +40,29 @@ class Faculty(GlobalBase):
     departments = relationship('Department', back_populates='faculty', cascade='all, delete-orphan')
 
 
-class Department(GlobalBase):
+class Department(ProjectBase):
     __tablename__ = 'department'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    student_capacity = Column(Integer, nullable=False)
+    # student_capacity = Column(Integer, nullable=False)
     faculty_id = Column(Integer, ForeignKey('faculty.id'), nullable=False)
 
     faculty = relationship('Faculty', back_populates='departments')
     programs = relationship('Program', back_populates='department', cascade='all, delete-orphan')
     specializations = relationship('Specialization', back_populates='department', cascade='all, delete-orphan')
 
-    # department_heads = relationship('DepartmentHead', back_populates='department')
+    department_heads = relationship('DepartmentHead', back_populates='department', cascade='all, delete-orphan')
     # assignment_results = relationship('AssignmentResult', back_populates='department')
     # preferences = relationship('Preferences', back_populates='department')
 
 
-class Program(GlobalBase):
+class Program(ProjectBase):
     __tablename__ = 'program'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
     gpa_threshold = Column(Float, nullable=False)
     student_capacity = Column(Integer, nullable=False)
-
-
 
     department = relationship('Department', back_populates='programs')
 
@@ -51,7 +73,7 @@ class Program(GlobalBase):
     # preferences = relationship('Preferences', back_populates='program')
 
 
-class Specialization(GlobalBase):
+class Specialization(ProjectBase):
     __tablename__ = 'specialization'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
@@ -69,17 +91,20 @@ class Specialization(GlobalBase):
     # preferences = relationship('Preferences', back_populates='specialization')
 
 
-
-class RequiredSubject (GlobalBase):
+class RequiredSubject(ProjectBase):
     __tablename__ = 'subjects_required'
     id = Column(Integer, primary_key=True)
     code = Column(String, nullable=False)
     min_grade = Column(Integer, nullable=False)
 
+    program_id = Column(Integer, ForeignKey('program.id'), nullable=False)
+    specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=False)
+
     program = relationship('Program', back_populates='subjects_required')
     specialization = relationship('Specialization', back_populates='subjects_required')
 
-class Person(GlobalBase):
+
+class Person(ProjectBase):
     __tablename__ = 'person'
 
     id = Column(Integer, primary_key=True)
@@ -89,18 +114,13 @@ class Person(GlobalBase):
     email = Column(String, nullable=False)
     phone_number = Column(String, nullable=False)
 
-    admin = relationship('Admin', back_populates='person',
-                         uselist=False,
-                         cascade="all, delete-orphan",
-                         single_parent=True)
-
     department_head = relationship('DepartmentHead', back_populates='person',
                                    uselist=False,
                                    cascade="all, delete-orphan",
                                    single_parent=True)
 
 
-class DepartmentHead(GlobalBase):
+class DepartmentHead(ProjectBase):
     __tablename__ = 'department_head'
 
     person_id = Column(Integer, ForeignKey('person.id', ondelete="CASCADE"), primary_key=True)
@@ -113,21 +133,7 @@ class DepartmentHead(GlobalBase):
     department = relationship('Department', back_populates='department_heads')
 
 
-class Admin(GlobalBase):
-    __tablename__ = 'admin'
 
-    person_id = Column(Integer, ForeignKey('person.id', ondelete="CASCADE"), primary_key=True)
-    username = Column(String, nullable=False)
-    password = Column(String, nullable=False)
-    role = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-
-    person = relationship('Person', back_populates='admin',
-                          cascade="all, delete",  # delete person if admin is deleted
-                          single_parent=True)
-
-    projects = relationship('Project', back_populates='creator')
-    action_logs = relationship('ActionLog', back_populates='admin')
 
 
 # class ActionLog(GlobalBase):
@@ -141,7 +147,7 @@ class Admin(GlobalBase):
 #     admin = relationship('Admin', back_populates='action_logs')
 
 
-class Project(GlobalBase):
+class Project(ProjectBase):
     __tablename__ = 'project'
 
     id = Column(Integer, primary_key=True)
@@ -152,25 +158,23 @@ class Project(GlobalBase):
     # created_by = Column(Integer, ForeignKey('admin.person_id'), nullable=False)
     # created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    creator = relationship('Admin', back_populates='projects')
+    # creator = relationship('Admin', back_populates='data')
     # action_logs = relationship('ActionLog', back_populates='admin')
 
 
-# Project database models
+
 
 class Student(ProjectBase):
     __tablename__ = 'student'
 
     id = Column(Integer, primary_key=True)
-    first_name = Column(String, nullable=False)
-    last_name = Column(String, nullable=False)
-    ssn = Column(String, unique=True, nullable=False)
+    name = Column(String, nullable=False)
     email = Column(String, nullable=False)
-    phone_number = Column(String, nullable=False)
-    gender = Column(String, nullable=False)
-    gpa = Column(Float, nullable=False)
-    eligibility_rank = Column(Integer, nullable=False)
-    passed_subjects = Column(Text, nullable=False)
+    gpa = Column(Float, nullable=False, default=0.00)
+    # phone_number = Column(String, nullable=False)
+    # gender = Column(String, nullable=False)
+    # eligibility_rank = Column(Integer, nullable=False)
+    # passed_subjects = Column(Text, nullable=False)
 
     student_grades = relationship('StudentGrades', back_populates='student', cascade='all, delete-orphan')
     preferences = relationship('Preferences', back_populates='student', cascade='all, delete-orphan')
@@ -228,7 +232,8 @@ class StudentAssignment(ProjectBase):
     )
 
     id = Column(Integer, primary_key=True)
-    project_id = Column(Integer, ForeignKey('project_info.id'), nullable=False) # Foreign key to project and if it not important delete
+    project_id = Column(Integer, ForeignKey('project_info.id'),
+                        nullable=False)  # Foreign key to project and if it not important delete
     student_id = Column(Integer, ForeignKey('student.id'), nullable=False)
 
     # One of these based on project type
@@ -259,15 +264,6 @@ class StudentAssignment(ProjectBase):
 #
 
 
-# class ActionLog(Base):
-#     __tablename__ = 'action_log'
-#     id = Column(Integer, primary_key=True)
-#     user_id = Column(Integer, ForeignKey('admin.person_id'))
-#     action_name = Column(String)
-#     action_details = Column(Text)
-#     timestamp = Column(DateTime, default=datetime.utcnow)
-#
-#     admin = relationship('Admin', back_populates='action_logs')
 
 #
 # General Imports and Base:

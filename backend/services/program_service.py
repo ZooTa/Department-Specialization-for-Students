@@ -2,7 +2,7 @@
 
 from sqlalchemy.orm import Session
 
-from database.models import Program
+from ..database.models import Program
 
 
 class ProgramService:
