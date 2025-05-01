@@ -32,22 +32,22 @@ class Admin(UserBase):
 
 
 # Project database models
-class Faculty(ProjectBase):
-    __tablename__ = 'faculty'
-    id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
-
-    departments = relationship('Department', back_populates='faculty', cascade='all, delete-orphan')
-
+# class Faculty(ProjectBase):
+#     __tablename__ = 'faculty'
+#     id = Column(Integer, primary_key=True)
+#     name = Column(String, nullable=False)
+#
+#     departments = relationship('Department', back_populates='faculty', cascade='all, delete-orphan')
+#
 
 class Department(ProjectBase):
     __tablename__ = 'department'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     # student_capacity = Column(Integer, nullable=False)
-    faculty_id = Column(Integer, ForeignKey('faculty.id'), nullable=False)
+    # faculty_id = Column(Integer, ForeignKey('faculty.id'), nullable=False)
 
-    faculty = relationship('Faculty', back_populates='departments')
+    # faculty = relationship('Faculty', back_populates='departments')
     programs = relationship('Program', back_populates='department', cascade='all, delete-orphan')
     specializations = relationship('Specialization', back_populates='department', cascade='all, delete-orphan')
 
@@ -186,7 +186,7 @@ class StudentGrades(ProjectBase):
     id = Column(Integer,
                 primary_key=True)  # Unique ID for each grade record عشان ممكن تسقط ف تعيد المادة ف الكود هيظهر مرتين
     subject_code = Column(String, nullable=False)
-    semester = Column(String, nullable=False)
+    # semester = Column(String, nullable=False)
     points = Column(Float, nullable=False)
     credit_hours = Column(Integer, nullable=False)
     student_id_num = Column(Integer, ForeignKey('student.id_num'))
@@ -194,15 +194,21 @@ class StudentGrades(ProjectBase):
     student = relationship('Student', back_populates='student_grades')
 
 
+
+
+
+
 class ProjectInfo(ProjectBase):
     __tablename__ = 'project_info'
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    type = Column(String)
+    ptype = Column(String)
+    excel_file_name = Column(String, nullable=False)
+    directory = Column(String, nullable=False)  # path to project folder
+    Note = Column(String, nullable=True)  # which year condition did we copy
     # created_at = Column(DateTime)
     # preference_count = Column(Integer, nullable=True)
 
-    preferences = relationship('Preferences', back_populates='project', cascade='all, delete-orphan')
     preferences = relationship('Preferences', back_populates='project', cascade='all, delete-orphan')
     assignment_results = relationship('StudentAssignment', back_populates='project', cascade='all, delete-orphan')
 

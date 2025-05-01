@@ -1,6 +1,5 @@
 # services/admin_service.py
 
-import bcrypt
 from sqlalchemy.orm import Session
 
 from ..database.models import Admin

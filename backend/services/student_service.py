@@ -15,7 +15,7 @@ class StudentService:
             id=id,
             name=name,
             email=email,
-            gpa=gpa
+            # gpa=gpa
             # ssn=ssn,
             # phone_number=phone_number,
             # gender=gender,

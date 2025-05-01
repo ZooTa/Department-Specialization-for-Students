@@ -1,70 +1,222 @@
 # from backend.services.admin_service import AdminService
-# from backend.database.database_config import get_session, init_user_db, init_project_db
+# # from backend.database.database_config import get_session, init_user_db, init_project_db
+# #
+# #
+# #
+# # # Initialize the database
+# #
+# # init_user_db()
+# # init_project_db("Class 2025")
+# #
+# # # Create a session
+# # with get_session() as session:
+# #     # Example usage of the session
+# #     admin_service = AdminService(session)
+# #
+# #     # Add a new admin
+# #     # admin_service.create("Ahmed Hussein", "ramen_goblin", "123", "admin")
+# #
+# #     # # Method to set password (hashing)
+# #     # admin_service.login("ramen_goblin", "123")
+# #     # print("hi hi \n")
+# #     # admin_service.login("ramen_goblin", "000")
+#
+#
+# from backend.process.project_management import (
+#     init_new_project,
+#     start_new_project_with_university_data,
+#     open_existing_project
+# )
+# from backend.database.database_config import get_session
+# from backend.services.faculty_service import FacultyService
+# import os
+#
+#
+# # Define project names and paths
+# new_project_name = "Class 2027"
+# existing_project_path = "../data/Class 2025"
+#
+# # # Initialize new project
+# #
+# # init_new_project(new_project_name)
+# #
+# # project_path = os.path.join("../data/", new_project_name)
+# #
+# # with get_session("database", project_path) as session:
+# #
+# #     faculity_service = FacultyService(session)
+# #
+# #     faculity_service.create("Engineering")
+#
+#
+# # # Initialize new project with university data
+#
+# start_new_project_with_university_data(new_project_name, existing_project_path)
 #
 #
 #
-# # Initialize the database
 #
-# init_user_db()
-# init_project_db("Class 2025")
 #
-# # Create a session
-# with get_session() as session:
-#     # Example usage of the session
-#     admin_service = AdminService(session)
+# # # Initialize new project with university data
+# # start_new_project_with_university_data(new_project_name, "../data/university")
 #
-#     # Add a new admin
-#     # admin_service.create("Ahmed Hussein", "ramen_goblin", "123", "admin")
+# # Open existing project
+# # open_existing_project(existing_project_path)
+# #
+# # with get_session("database", existing_project_path) as session:
+# #
+# #     faculity_service = FacultyService(session)
+# #
+# #     faculity_service.create("Engineering")
 #
-#     # # Method to set password (hashing)
-#     # admin_service.login("ramen_goblin", "123")
-#     # print("hi hi \n")
-#     # admin_service.login("ramen_goblin", "000")
+#
+#
+#
+# # with get_session() as session:
+# #     # Example usage of the session
+# #     admin_service = AdminService(session)
+# #     # Add a new admin
+# #     admin_service.create("Ahmed Hussein", "ramen_goblin", "123", "admin")
+# #     admin_service.create("Yousif Ahmed", "zoota", "456", "admin")
+# #     admin_service.create("Eman", "Emo", "456", "system admin")
+#
+#
+#
+# # import os
+# #
+# # from sqlalchemy import create_engine, MetaData
+# # # from backend.database.database_config import BASE_PATH
+# #
+# # BASE_PATH = "../data/"
+# #
+# # project_name = "Class 2027"
+# # prev_project_path = "../data/Class 2025"
+# #
+# #
+# # tables_to_copy = ["faculty", "department", "program", "specialization", "subjects_required", "department_head"]
+# # prev_db_path = os.path.join(prev_project_path, "database.db")
+# #
+# #
+# # project_path = os.path.join(BASE_PATH, project_name)
+# # project_db_path = os.path.join(project_path, "database.db")
+# #
+# #
+# # source_engine = create_engine(f"sqlite:///{prev_db_path}", echo=True)
+# # target_engine = create_engine(f"sqlite:///{project_db_path}", echo=True)
+# #
+# # source_metadata = MetaData()
+# # source_metadata.reflect(bind=source_engine, only=tables_to_copy)
+# #
+# # target_metadata = MetaData()
+# # target_metadata.reflect(bind=target_engine)
+# #
+# # with source_engine.connect() as source_conn, target_engine.connect() as target_conn:
+# #     for table in source_metadata.sorted_tables:
+# #         table_name = table.name
+# #
+# #         # Create the table in the target if not exists
+# #         table.metadata.create_all(target_engine)
+# #
+# #         rows = source_conn.execute(table.select()).fetchall()
+# #
+# #         column_names = [column.name for column in table.columns()]
+# #
+# #         rows_to_insert = [dict(zip(column_names, row)) for row in rows]
+# #
+# #         if rows_to_insert:
+# #             print(f"Inserting {len(rows_to_insert)} row(s) into '{table_name}'...")
+# #             target_conn.execute(table.insert(), rows_to_insert)
+# #
+# #
+# #
+# #
+# #
+# #
+# #
+# # def copy_fixed_tables_to_project(
+# #     university_folder: str,
+# #     project_name: str,
+# #     skip_existing_tables: bool = False,
+# #     clear_existing_data: bool = False
+# # ):
+# #     """Copy fixed tables from university DB to project DB."""
+# #     tables_to_copy = ["faculty", "department", "program", "specialization", "subjects_required", "department_head"]
+# #     university_db_path = os.path.join(university_folder, "database.db")
+# #
+# #     project_path = os.path.join(BASE_PATH, project_name)
+# #     project_db_path = os.path.join(project_path, "database.db")
+# #
+# #     source_engine = create_engine(f"sqlite:///{university_db_path}", echo=True)
+# #     target_engine = create_engine(f"sqlite:///{project_db_path}", echo=True)
+# #
+# #     source_metadata = MetaData()
+# #     source_metadata.reflect(bind=source_engine, only=tables_to_copy)
+# #
+# #     target_metadata = MetaData()
+# #     target_metadata.reflect(bind=target_engine)
+# #
+# #     with source_engine.connect() as source_conn, target_engine.connect() as target_conn:
+# #         for table in source_metadata.sorted_tables:
+# #             table_name = table.name
+# #             if skip_existing_tables and table_name in target_metadata.tables:
+# #                 print(f"Skipping '{table_name}' (already exists).")
+# #                 continue
+# #
+# #             # Create the table in the target if not exists
+# #             table.metadata.create_all(target_engine)
+# #
+# #             if clear_existing_data:
+# #                 target_conn.execute(table.delete())  # Use table.delete() to clear the table
+# #
+# #             # Fetch data and convert each row to a dictionary format
+# #             rows = source_conn.execute(table.select()).fetchall()
+# #             column_names = [column.name for column in table.columns]
+# #
+# #             # Convert rows to dictionaries
+# #             rows_to_insert = [dict(zip(column_names, row)) for row in rows]
+# #
+# #             if rows_to_insert:
+# #                 print(f"Inserting {len(rows_to_insert)} row(s) into '{table_name}'...")
+# #                 target_conn.execute(table.insert(), rows_to_insert)
+# #
+# #     print("Finished copying selected university tables.")
 
 
-from backend.process.project_management import (
-    init_new_project,
-    start_new_project_with_university_data,
-    open_existing_project
-)
+
+
+
+from backend.database.database_config import init_user_db
 from backend.database.database_config import get_session
-from backend.services.faculty_service import FacultyService
-import os
+from backend.services.admin_service import AdminService
+# from backend.process.project_management import open_existing_project
 
+# Initialize the database
 
-# Define project names and paths
-new_project_name = "Class 2027"
-existing_project_path = "../data/Class 2025"
+# open_existing_project("Z:\projects new\Graduation project\data\Class 2025")
 
-# # Initialize new project
-#
-# init_new_project(new_project_name)
-#
-# project_path = os.path.join("../data/", new_project_name)
-#
-# with get_session("database", project_path) as session:
-#
-#     faculity_service = FacultyService(session)
-#
-#     faculity_service.create("Engineering")
-
-
-# # Initialize new project with university data
-
-start_new_project_with_university_data(new_project_name, existing_project_path)
+# Create a session
 
 
 
 
 
-# # Initialize new project with university data
-# start_new_project_with_university_data(new_project_name, "../data/university")
+from backend.database.database_config import init_user_db
+from backend.database.database_config import get_session
+from backend.services.admin_service import AdminService
 
-# Open existing project
-# open_existing_project(existing_project_path)
-#
-# with get_session("database", existing_project_path) as session:
-#
-#     faculity_service = FacultyService(session)
-#
-#     faculity_service.create("Engineering")
+
+# Initialize user database
+init_user_db()
+
+# get session
+# Create a session
+
+with get_session() as session:
+    admin_service = AdminService(session)
+
+    user_name = "ramen_goblin"
+    password = "123"
+
+    admin_service.login(user_name, password)
+
+

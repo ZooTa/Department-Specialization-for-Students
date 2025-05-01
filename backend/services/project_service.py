@@ -1,41 +1,31 @@
-from sqlalchemy.orm import Session
-from ..database.models import Project, ProjectInfo
+# services/project_service.py
 
+from sqlalchemy.orm import Session
+from ..database.models import ProjectInfo
 
 class ProjectService:
-    def __init__(self, project_session: Session, project_info_session: Session):
-        self.project_session = project_session
-        self.project_info_session = project_info_session
+    def __init__(self, session: Session):
+        self.session = session
 
-    def create(self, name, type, excel_file_name, directory):
-        new_project = Project(
+    def create(self, name, type, excel_file_name, directory, note=None):
+        new_project = ProjectInfo(
             name=name,
             type=type,
             excel_file_name=excel_file_name,
-            directory=directory
+            directory=directory,
+            Note=note
         )
-        self.project_session.add(new_project)
-        self.project_session.flush()  # Assigns ID
-
-        new_info = ProjectInfo(
-            id=new_project.id,
-            name=name,
-            type=type
-        )
-        self.project_info_session.add(new_info)
-
-        self.project_session.commit()
-        self.project_info_session.commit()
-
+        self.session.add(new_project)
+        self.session.commit()
         return new_project
 
     def get(self, project_id):
-        return self.project_session.get(Project, project_id)
+        return self.session.get(ProjectInfo, project_id)
 
     def get_all(self):
-        return self.project_session.query(Project).all()
+        return self.session.query(ProjectInfo).all()
 
-    def update(self, project_id, name=None, type=None, excel_file_name=None, directory=None):
+    def update(self, project_id, name=None, type=None, excel_file_name=None, directory=None, note=None):
         project = self.get(project_id)
         if not project:
             print("Project not found.")
@@ -55,9 +45,12 @@ class ProjectService:
         if directory is not None:
             project.directory = directory
             updated = True
+        if note is not None:
+            project.Note = note
+            updated = True
 
         if updated:
-            self.project_session.commit()
+            self.session.commit()
             print("Project updated successfully.")
         else:
             print("Nothing to update.")
@@ -70,12 +63,6 @@ class ProjectService:
             print("Project not found.")
             return
 
-        # Delete the corresponding ProjectInfo
-        project_info = self.project_info_session.get(ProjectInfo, project_id)
-        if project_info:
-            self.project_info_session.delete(project_info)
-            self.project_info_session.commit()
-
-        self.project_session.delete(project)
-        self.project_session.commit()
+        self.session.delete(project)
+        self.session.commit()
         return project

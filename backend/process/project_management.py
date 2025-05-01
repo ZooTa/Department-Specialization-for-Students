@@ -1,26 +1,45 @@
 # backend/database/process/project_management.py
 
-from ..database.database_config import init_project_database, copy_fixed_tables_to_project
+from ..database.database_config import init_project_database, copy_fixed_tables_to_project, get_session
+from ..services.project_service import ProjectService
 
 
-def init_new_project(project_name):
-    """Initialize a new project by creating a folder in the base path with the given name."""
-    init_project_database(project_name)
+def start(operation="existing",
+          exist_db_folder=None,
+          year=None,
+          level=None,
+          term=None,
+          ptype=None,
+          student_file=None,
+          prefrence_file=None,
+          note=None):
+
+    if operation == "existing":
+        # Open an existing project
+        init_project_database(exist_db_folder)
+
+    elif operation == "new":
+        project_name = f"ClassInfo_{year}_{level}_{term}_{ptype}"
+
+        init_project_database(project_name)
+
+        if exist_db_folder:
+            copy_fixed_tables_to_project(
+                university_folder=exist_db_folder,
+                project_name=project_name,
+                # skip_existing_tables=True,
+                # clear_existing_data=False
+            )
+
+        session = get_session("database", project_name)
+
+        project_service = ProjectService(session)
+        project_service.create(
+            name=project_name,
+            type=ptype,
+            excel_file_name=student_file,
+            directory=project_name,
+            note=note
+        )
 
 
-
-def start_new_project_with_university_data(project_name, university_folder):
-    """Initialize a new project, copying university data into it."""
-    init_new_project(project_name)
-    copy_fixed_tables_to_project(
-        university_folder=university_folder,
-        project_name=project_name,
-        # skip_existing_tables=True,
-        # clear_existing_data=False
-    )
-
-
-def open_existing_project(project_path):
-    """Open an existing project located at the given path."""
-    # Initialize the project database if it's not already initialized
-    init_project_database(project_path)
