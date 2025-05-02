@@ -254,18 +254,18 @@ from backend.services.department_service import DepartmentService
 
 
 
-start_app(operation="existing",
-          exist_db_folder="Z:\projects new\Graduation project\data\ClassInfo_2025_2_1_department")
-
-
-
-
-
-
-
-
-pm = ProjectManager()
-path = pm.get_project_path()
-with get_session("database", path) as session:
-    pass
+# start_app(operation="existing",
+#           exist_db_folder="Z:\projects new\Graduation project\data\ClassInfo_2025_2_1_department")
+#
+#
+#
+#
+#
+#
+#
+#
+# pm = ProjectManager()
+# path = pm.get_project_path()
+# with get_session("database", path) as session:
+#     pass
 

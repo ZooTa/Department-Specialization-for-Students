@@ -45,7 +45,7 @@ class AdminService:
             admin.username = username
             updated = True
         if password is not None:
-            admin.password = password
+            admin.set_password(password)
             updated = True
         if role is not None:
             admin.role = role
