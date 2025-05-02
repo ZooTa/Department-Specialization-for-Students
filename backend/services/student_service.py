@@ -2,26 +2,31 @@
 
 from sqlalchemy.orm import Session
 
-from ..database.models import Student
+from ..database.models import Student, Preferences
 
 
 class StudentService:
     def __init__(self, session: Session):
         self.session = session
 
-    def create(self, id, name, ssn, email, phone_number, gender, gpa, eligibility_rank, passed_subjects):
-        # Create a new Student linked to the Person
+    def create(self, id_num, name, email, gpa=0.0, preference_names=None):
+
         new_student = Student(
-            id=id,
+            id_num=id_num,
             name=name,
             email=email,
-            # gpa=gpa
-            # ssn=ssn,
-            # phone_number=phone_number,
-            # gender=gender,
-            # eligibility_rank=eligibility_rank,
-            # passed_subjects=passed_subjects
+            gpa=gpa
         )
+
+        # Add up to 6 preferences by name
+        if preference_names:
+            for i, name in enumerate(preference_names[:6], start=1):
+                preference = Preferences(
+                    name=name,
+                    preference_order=i
+                )
+                new_student.preferences.append(preference)
+
         self.session.add(new_student)
         self.session.commit()
         return new_student
@@ -32,7 +37,7 @@ class StudentService:
     def get_all(self):
         return self.session.query(Student).all()
 
-    def update(self, student_id, id_num=None, name=None, email=None, gpa=None):
+    def update(self, student_id, id_num=None, name=None, email=None, gpa=None, preference_names=None):
         student = self.get(student_id)
         if not student:
             print("Student not found.")
@@ -40,7 +45,7 @@ class StudentService:
 
         updated = False
 
-        # Update Student details
+        # Update student fields
         if id_num is not None:
             student.id_num = id_num
             updated = True
@@ -52,6 +57,21 @@ class StudentService:
             updated = True
         if gpa is not None:
             student.gpa = gpa
+            updated = True
+
+        # Update preferences if a new list is provided
+        if preference_names:
+            # Clear existing preferences
+            student.preferences.clear()
+
+            # Add the new ones
+            for i, name in enumerate(preference_names[:6], start=1):
+                new_pref = Preferences(
+                    name=name,
+                    preference_order=i
+                )
+                student.preferences.append(new_pref)
+
             updated = True
 
         if updated:

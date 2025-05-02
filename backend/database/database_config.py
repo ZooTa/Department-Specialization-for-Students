@@ -11,6 +11,18 @@ BASE_PATH = Path("../data").resolve()  # Normalize base path
 user_db_uri = f"sqlite:///{BASE_PATH / 'user_info.db'}"
 user_engine = create_engine(user_db_uri, echo=True)
 
+
+from pathlib import Path
+
+def get_db_path(project_name: str) -> Path:
+    if not project_name:
+        raise ValueError("Project name is not set.")
+    base = Path("../data").resolve()
+    project_path = base / project_name  # Use pathlib to join paths
+    project_path.mkdir(parents=True, exist_ok=True)  # Ensure the project directory exists
+    db_path = base / project_name / "database.db"
+    return db_path
+
 def init_user_db():
     """Initialize the global user database."""
 
@@ -19,20 +31,16 @@ def init_user_db():
     UserBase.metadata.create_all(user_engine)
     print("GlobalBase and its tables created successfully.")
 
-def get_project_engine(project_path: str):
+def get_project_engine(project_name: str):
     """Get the SQLAlchemy engine for the project database."""
-    db_path = Path(project_path) / "database.db"  # Use pathlib to construct the path
+    db_path = get_db_path(project_name) # Use pathlib to construct the path
     return create_engine(f"sqlite:///{db_path}", echo=True)
 
 def init_project_database(project_name: str):
     """Initialize the project database at the specified path."""
-    project_path = BASE_PATH / project_name  # Use pathlib to join paths
-    project_path.mkdir(parents=True, exist_ok=True)  # Ensure the project directory exists
-    db_path = project_path / "database.db"  # Use pathlib for db path
-    project_engine = create_engine(f"sqlite:///{db_path}", echo=True)
-
+    project_engine = get_project_engine(project_name)
     ProjectBase.metadata.create_all(project_engine)
-    print(f"Database for project created at '{db_path}'")
+    print(f"Database for project created at '{get_db_path(project_name)}'")
 
 
 def copy_fixed_tables_to_project(university_folder: str, project_name: str):
@@ -41,12 +49,12 @@ def copy_fixed_tables_to_project(university_folder: str, project_name: str):
     The list of tables is constant and copied every time.
     """
     tables_to_copy = [
-        "faculty", "department", "program", "specialization",
+        "department", "program", "specialization",
         "subjects_required", "department_head"
     ]
 
     university_db_path = Path(university_folder) / "database.db"  # Normalize path using pathlib
-    project_db_path = BASE_PATH / project_name / "database.db"  # Normalize path for project DB
+    project_db_path = get_db_path(project_name)  # Normalize path for project DB
 
     # Create engines for both DBs
     source_engine = create_engine(f"sqlite:///{university_db_path}", echo=True)

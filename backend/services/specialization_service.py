@@ -74,3 +74,6 @@ class SpecializationService:
         self.session.delete(specialization)
         self.session.commit()
         return specialization
+
+    def get_by_name(self, name: str):
+        return self.session.query(Specialization).filter(Specialization.name == name).first()

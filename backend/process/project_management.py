@@ -1,22 +1,41 @@
 # backend/database/process/project_management.py
 
-from ..database.database_config import init_project_database, copy_fixed_tables_to_project, get_session
-from ..services.project_service import ProjectService
+from ..database.database_config import BASE_PATH, init_project_database, copy_fixed_tables_to_project, get_session
+from ..services.project_service import ProjectInfoService, ProjectManager
 
 
-def start(operation="existing",
-          exist_db_folder=None,
+def start_app(operation="existing", # "existing" or "new"
+          exist_db_folder=None, # if prev project or we will load prev data
           year=None,
           level=None,
           term=None,
-          ptype=None,
+          ptype=None, # "department" or "program" or "specialization"
           student_file=None,
           prefrence_file=None,
           note=None):
 
+
+# -> new without old data
+
+# -> new with old data
+
+# -> existing with old data
+
+
+
+
+
+
+
+
+
+
+    pm = ProjectManager()
     if operation == "existing":
         # Open an existing project
+        pm.set_project_path(exist_db_folder)
         init_project_database(exist_db_folder)
+
 
     elif operation == "new":
         project_name = f"ClassInfo_{year}_{level}_{term}_{ptype}"
@@ -31,15 +50,17 @@ def start(operation="existing",
                 # clear_existing_data=False
             )
 
-        session = get_session("database", project_name)
+        with get_session("database", project_name) as session:
+            # Create a new project
+            path = project_name
+            pm.set_project_path(path)
+            project_service = ProjectInfoService(session)
+            project_service.create(
+                name=project_name,
+                ptype=ptype,
+                db_directory=path,
+                note=note
+            )
 
-        project_service = ProjectService(session)
-        project_service.create(
-            name=project_name,
-            type=ptype,
-            excel_file_name=student_file,
-            directory=project_name,
-            note=note
-        )
 
 

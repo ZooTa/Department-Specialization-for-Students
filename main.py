@@ -182,12 +182,6 @@
 # #     print("Finished copying selected university tables.")
 
 
-
-
-
-from backend.database.database_config import init_user_db
-from backend.database.database_config import get_session
-from backend.services.admin_service import AdminService
 # from backend.process.project_management import open_existing_project
 
 # Initialize the database
@@ -196,27 +190,82 @@ from backend.services.admin_service import AdminService
 
 # Create a session
 
-
-
-
+from backend.services.project_service import ProjectManager
 
 from backend.database.database_config import init_user_db
 from backend.database.database_config import get_session
 from backend.services.admin_service import AdminService
 
-
 # Initialize user database
-init_user_db()
+# init_user_db()
 
 # get session
 # Create a session
 
-with get_session() as session:
-    admin_service = AdminService(session)
+# with get_session() as session:
+#     admin_service = AdminService(session)
+#
+#     user_name = "ramen_goblin"
+#     password = "123"
+#
+#     admin_service.login(user_name, password)
 
-    user_name = "ramen_goblin"
-    password = "123"
+from backend.process.project_management import start_app
+from backend.services.department_service import DepartmentService
 
-    admin_service.login(user_name, password)
+# start(operation="existing",
+#       exist_db_folder="Z:\projects new\Graduation project\data\ClassInfo_2025_2_1_department",
+#       )
 
+
+
+# start(operation="existing",
+#       exist_db_folder="Z:\projects new\ClassInfo_2025_2_1_department"
+# )
+
+# pm = ProjectManager()
+# path = pm.get_project_path()
+#
+# from backend.services.student_service import StudentService
+#
+# with get_session("database", path) as session:
+#     student_service = StudentService(session)
+#
+#     student1 = student_service.create(
+#         id_num="123456",
+#         name="Ahmed",
+#         email="a@gmail.com",
+#         gpa=3.5,
+#         preference_names=["CS", "AI", "ML"]
+#     )
+
+
+
+
+# start_app(operation="new",
+#         year=2025,
+#         level=2,
+#         term=1,
+#         ptype="department",
+#         student_file=None,
+#         prefrence_file=None,
+#         note=None
+#     )
+
+
+
+start_app(operation="existing",
+          exist_db_folder="Z:\projects new\Graduation project\data\ClassInfo_2025_2_1_department")
+
+
+
+
+
+
+
+
+pm = ProjectManager()
+path = pm.get_project_path()
+with get_session("database", path) as session:
+    pass
 

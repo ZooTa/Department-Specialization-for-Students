@@ -8,11 +8,10 @@ class DepartmentService:
     def __init__(self, session: Session):
         self.session = session
 
-    def create(self, name, student_capacity, faculty_id):
+    def create(self, name, student_capacity):
         new_department = Department(
             name=name,
             student_capacity=student_capacity,
-            faculty_id=faculty_id
         )
         self.session.add(new_department)
         self.session.commit()
@@ -24,7 +23,7 @@ class DepartmentService:
     def get_all(self):
         return self.session.query(Department).all()
 
-    def update(self, department_id, name=None, student_capacity=None, faculty_id=None):
+    def update(self, department_id, name=None, student_capacity=None):
         department = self.get(department_id)
         if not department:
             print("Department not found.")
@@ -38,9 +37,9 @@ class DepartmentService:
         if student_capacity is not None:
             department.student_capacity = student_capacity
             updated = True
-        if faculty_id is not None:
-            department.faculty_id = faculty_id
-            updated = True
+        # if faculty_id is not None:
+        #     department.faculty_id = faculty_id
+        #     updated = True
 
         if updated:
             self.session.commit()
@@ -60,3 +59,6 @@ class DepartmentService:
         self.session.commit()
         print("Department deleted successfully.")
         return department
+
+    def get_by_username(self, name: str):
+        return self.session.query(Department).filter(Department.name == name).first()

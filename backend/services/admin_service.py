@@ -28,7 +28,7 @@ class AdminService:
     def get_all(self):
         return self.session.query(Admin).all()
 
-    def update(self, admin_id, name=None, last_name=None, ssn=None, email=None, phone_number=None, username=None,
+    def update(self, admin_id, name=None, ssn=None, email=None, phone_number=None, username=None,
                password=None, role=None):
         admin = self.get(admin_id)
         if not admin:
@@ -77,3 +77,6 @@ class AdminService:
             return admin.role
         print("Invalid username or password.")
         return None
+
+    def get_by_username(self, username: str):
+        return self.session.query(Admin).filter(Admin.username == username).first()

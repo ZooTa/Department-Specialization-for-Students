@@ -69,3 +69,6 @@ class ProgramService:
         self.session.delete(program)
         self.session.commit()
         return program
+
+    def get_by_name(self, name: str):
+        return self.session.query(Program).filter(Program.name == name).first()

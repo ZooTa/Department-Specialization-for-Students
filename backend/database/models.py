@@ -44,7 +44,7 @@ class Department(ProjectBase):
     __tablename__ = 'department'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    # student_capacity = Column(Integer, nullable=False)
+    student_capacity = Column(Integer, nullable=False)
     # faculty_id = Column(Integer, ForeignKey('faculty.id'), nullable=False)
 
     # faculty = relationship('Faculty', back_populates='departments')
@@ -147,19 +147,19 @@ class DepartmentHead(ProjectBase):
 #     admin = relationship('Admin', back_populates='action_logs')
 
 
-class Project(ProjectBase):
-    __tablename__ = 'project'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False, unique=True)
-    type = Column(String, nullable=False)  # 'department' or 'program' or 'specialization'
-    excel_file_name = Column(String, nullable=False)
-    directory = Column(String, nullable=False)  # path to project folder
-    # created_by = Column(Integer, ForeignKey('admin.person_id'), nullable=False)
-    # created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
-
-    # creator = relationship('Admin', back_populates='data')
-    # action_logs = relationship('ActionLog', back_populates='admin')
+# class Project(ProjectBase):
+#     __tablename__ = 'project'
+#
+#     id = Column(Integer, primary_key=True)
+#     name = Column(String, nullable=False, unique=True)
+#     type = Column(String, nullable=False)  # 'department' or 'program' or 'specialization'
+#     excel_file_name = Column(String, nullable=False)
+#     directory = Column(String, nullable=False)  # path to project folder
+#     # created_by = Column(Integer, ForeignKey('admin.person_id'), nullable=False)
+#     # created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
+#
+#     # creator = relationship('Admin', back_populates='data')
+#     # action_logs = relationship('ActionLog', back_populates='admin')
 
 
 
@@ -193,6 +193,22 @@ class StudentGrades(ProjectBase):
 
     student = relationship('Student', back_populates='student_grades')
 
+class Preferences(ProjectBase):
+    __tablename__ = 'preferences'
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False)
+    student_id_num = Column(Integer, ForeignKey('student.id_num'))
+    # project_id = Column(Integer, ForeignKey('project_info.id'))
+    preference_order = Column(Integer)
+
+    # Only one of these will be used, based on project type
+    department_id = Column(Integer, nullable=True)
+    program_id = Column(Integer, nullable=True)
+    specialization_id = Column(Integer, nullable=True)
+
+    student = relationship('Student', back_populates='preferences')
+    # project = relationship('ProjectInfo', back_populates='preferences')
+
 
 
 
@@ -203,54 +219,38 @@ class ProjectInfo(ProjectBase):
     id = Column(Integer, primary_key=True)
     name = Column(String)
     ptype = Column(String)
-    excel_file_name = Column(String, nullable=False)
-    directory = Column(String, nullable=False)  # path to project folder
+    # excel_file_name = Column(String, nullable=False)
+    db_directory = Column(String, nullable=False)  # path to project folder
     Note = Column(String, nullable=True)  # which year condition did we copy
     # created_at = Column(DateTime)
     # preference_count = Column(Integer, nullable=True)
 
-    preferences = relationship('Preferences', back_populates='project', cascade='all, delete-orphan')
-    assignment_results = relationship('StudentAssignment', back_populates='project', cascade='all, delete-orphan')
+    # preferences = relationship('Preferences', back_populates='project', cascade='all, delete-orphan')
+    # assignment_results = relationship('StudentAssignment', back_populates='project', cascade='all, delete-orphan')
 
-
-class Preferences(ProjectBase):
-    __tablename__ = 'preferences'
-    id = Column(Integer, primary_key=True)
-    name = Column(String, nullable=False)
-    student_id_num = Column(Integer, ForeignKey('student.id_num'))
-    project_id = Column(Integer, ForeignKey('project_info.id'))
-    preference_order = Column(Integer)
-
-    # Only one of these will be used, based on project type
-    department_id = Column(Integer, nullable=True)
-    program_id = Column(Integer, nullable=True)
-    specialization_id = Column(Integer, nullable=True)
-
-    student = relationship('Student', back_populates='preferences')
-    project = relationship('ProjectInfo', back_populates='preferences')
 
 
 class StudentAssignment(ProjectBase):
     __tablename__ = 'assignment_result'
 
-    __table_args__ = (
-        UniqueConstraint('student_id_num', 'project_id', name='uix_student_project'),
-    )
+    # __table_args__ = (
+    #     UniqueConstraint('student_id_num', 'project_id', name='uix_student_project'),
+    # )
 
     id = Column(Integer, primary_key=True)
-    project_id = Column(Integer, ForeignKey('project_info.id'),
-                        nullable=False)  # Foreign key to project and if it not important delete
+    # project_id = Column(Integer, ForeignKey('project_info.id'),nullable=False)  # Foreign key to project and if it not important delete
     student_id_num = Column(Integer, ForeignKey('student.id_num'), nullable=False)
+    result = Column(String, nullable=True)
 
     # One of these based on project type
     department_id = Column(Integer, nullable=True)
     program_id = Column(Integer, nullable=True)
     specialization_id = Column(Integer, nullable=True)
 
-    assignment_date = Column(DateTime, nullable=False)
-    status = Column(String, nullable=False)  # e.g., "assigned", "pending", "failed"
+    # assignment_date = Column(DateTime, nullable=False)
+    # status = Column(String, nullable=False)  # e.g., "assigned", "pending", "failed"
 
-    project = relationship('ProjectInfo', back_populates='assignment_results')
+    # project = relationship('ProjectInfo', back_populates='assignment_results')
     student = relationship('Student', back_populates='assignment_results')
 
 #
