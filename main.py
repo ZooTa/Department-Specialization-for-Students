@@ -181,7 +181,6 @@
 # #
 # #     print("Finished copying selected university tables.")
 
-
 # from backend.process.project_management import open_existing_project
 
 # Initialize the database
@@ -190,18 +189,26 @@
 
 # Create a session
 
-from backend.services.project_service import ProjectManager
-
-from backend.database.database_config import init_user_db
 from backend.database.database_config import get_session
-from backend.services.admin_service import AdminService
+#
+# from backend.process.project_management import start_app
+# start_app(operation="existing",
+#           exist_db_folder="Z:\projects new\Graduation project\data\ClassInfo_2025_2_1_department")
+#
+# #
+#
+#
+#
+#
+#
+#
+from backend.process.project_management import start_app
+from backend.services.project_service import ProjectManager
 
 # Initialize user database
 # init_user_db()
-
 # get session
 # Create a session
-
 # with get_session() as session:
 #     admin_service = AdminService(session)
 #
@@ -209,20 +216,12 @@ from backend.services.admin_service import AdminService
 #     password = "123"
 #
 #     admin_service.login(user_name, password)
-
-from backend.process.project_management import start_app
-from backend.services.department_service import DepartmentService
-
 # start(operation="existing",
 #       exist_db_folder="Z:\projects new\Graduation project\data\ClassInfo_2025_2_1_department",
 #       )
-
-
-
 # start(operation="existing",
 #       exist_db_folder="Z:\projects new\ClassInfo_2025_2_1_department"
 # )
-
 # pm = ProjectManager()
 # path = pm.get_project_path()
 #
@@ -238,10 +237,6 @@ from backend.services.department_service import DepartmentService
 #         gpa=3.5,
 #         preference_names=["CS", "AI", "ML"]
 #     )
-
-
-
-
 # start_app(operation="new",
 #         year=2025,
 #         level=2,
@@ -252,20 +247,17 @@ from backend.services.department_service import DepartmentService
 #         note=None
 #     )
 
+start_app(operation="new",
+          year=2029,
+          level=2,
+          term=1,
+          ptype="department",
+          student_file=r"Z:\projects new\Graduation project\Department-Specialization-for-Students\files\Converted_Student_Data_v4.csv",
+          preference_file=r"Z:\projects new\Graduation project\Department-Specialization-for-Students\files\form.csv",
+          note=None
+          )
 
-
-# start_app(operation="existing",
-#           exist_db_folder="Z:\projects new\Graduation project\data\ClassInfo_2025_2_1_department")
-#
-#
-#
-#
-#
-#
-#
-#
-# pm = ProjectManager()
-# path = pm.get_project_path()
-# with get_session("database", path) as session:
-#     pass
-
+pm = ProjectManager()
+path = pm.get_project_path()
+with get_session("database", path) as session:
+    pass

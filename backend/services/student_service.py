@@ -100,3 +100,17 @@ class StudentService:
         total_gpa = sum(student.gpa for student in students)
         mean_gpa = total_gpa / len(students)
         return mean_gpa
+
+
+    def add_df(self, df):
+        new_students= []
+        for _, row in df.iterrows():
+            new_student = Student(
+                id_num=row["id"],
+                name=row["name"],
+                email=row["email"],
+                gpa=row["gpa"],
+            )
+            new_students.append(new_student)
+        self.session.add_all(new_students)
+        self.session.commit()

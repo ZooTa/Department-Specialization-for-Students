@@ -6,11 +6,11 @@ class PreferencesService:
     def __init__(self, session: Session):
         self.session = session
 
-    def create(self, name, student_id, project_id, preference_order, department_id=None, program_id=None, specialization_id=None):
+    def create(self, name, student_id, preference_order, department_id=None, program_id=None, specialization_id=None):
         new_preference = Preferences(
             name=name,
             student_id=student_id,
-            project_id=project_id,
+            # project_id=project_id,
             preference_order=preference_order,
             department_id=department_id,
             program_id=program_id,
@@ -73,3 +73,15 @@ class PreferencesService:
         self.session.delete(preference)
         self.session.commit()
         return preference
+
+    def add_df(self, df):
+        new_prefrences= []
+        for _, row in df.iterrows():
+            new_prefrence = Preferences(
+                student_id_num=row["id"],
+                name=row["preference"],
+                preference_order=row["preference_order"],
+            )
+            new_prefrences.append(new_prefrence)
+        self.session.add_all(new_prefrences)
+        self.session.commit()

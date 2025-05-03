@@ -63,3 +63,16 @@ class StudentGradesService:
         self.session.delete(grade)
         self.session.commit()
         return grade
+
+    def add_df(self, df):
+        new_grades= []
+        for _, row in df.iterrows():
+            new_grade = StudentGrades(
+                student_id_num=row["id"],
+                subject_code=row["subject_code"],
+                points=row["gpa"],
+                credit_hours=row["cridet_hours"],
+            )
+            new_grades.append(new_grade)
+        self.session.add_all(new_grades)
+        self.session.commit()

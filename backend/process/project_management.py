@@ -1,34 +1,24 @@
 # backend/database/process/project_management.py
 
-from ..database.database_config import BASE_PATH, init_project_database, copy_fixed_tables_to_project, get_session
+from .student_data_processor import StudentDataProcessor
+from ..database.database_config import init_project_database, copy_fixed_tables_to_project, get_session
 from ..services.project_service import ProjectInfoService, ProjectManager
 
 
-def start_app(operation="existing", # "existing" or "new"
-          exist_db_folder=None, # if prev project or we will load prev data
-          year=None,
-          level=None,
-          term=None,
-          ptype=None, # "department" or "program" or "specialization"
-          student_file=None,
-          prefrence_file=None,
-          note=None):
+def start_app(operation="existing",  # "existing" or "new"
+              exist_db_folder=None,  # if prev project or we will load prev data
+              year=None,
+              level=None,
+              term=None,
+              ptype=None,  # "department" or "program" or "specialization"
+              student_file=None,
+              preference_file=None,
+              note=None):
+    # -> new without old data
 
+    # -> new with old data
 
-# -> new without old data
-
-# -> new with old data
-
-# -> existing with old data
-
-
-
-
-
-
-
-
-
+    # -> existing with old data
 
     pm = ProjectManager()
     if operation == "existing":
@@ -61,6 +51,5 @@ def start_app(operation="existing", # "existing" or "new"
                 db_directory=path,
                 note=note
             )
-
-
-
+            data_proc = StudentDataProcessor(student_file, preference_file, session)
+            data_proc.process_all_data()
