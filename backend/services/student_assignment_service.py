@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from ..database.models import StudentAssignment
-
+import pandas as pd
 
 class StudentAssignmentService:
     def __init__(self, session: Session):
@@ -75,3 +75,20 @@ class StudentAssignmentService:
         self.session.delete(assignment)
         self.session.commit()
         return assignment
+
+
+    def save_to_csv(self, file_path):
+        # Fetch all assignments
+        assignments = self.get_all()
+
+        # Convert to DataFrame
+        data = [{
+            'student_id': assignment.student_id,
+            'student_name': assignment.student_id.student.name,
+            'result': assignment.result
+        } for assignment in assignments]
+
+        df = pd.DataFrame(data)
+
+        # Save to CSV
+        df.to_csv(file_path, index=False)

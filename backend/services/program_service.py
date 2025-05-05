@@ -2,21 +2,35 @@
 
 from sqlalchemy.orm import Session
 
-from ..database.models import Program
+from ..database.models import Program, RequiredSubject
 
 
 class ProgramService:
     def __init__(self, session: Session):
         self.session = session
 
-    def create(self, name, department_id, subjects_required, gpa_threshold, student_capacity):
+    def create(self, name:str, department_id:int, gpa_threshold:float = None, student_capacity:int= None, subjects_required_dict:dict = None):
         new_program = Program(
             name=name,
             department_id=department_id,
-            subjects_required=subjects_required,
             gpa_threshold=gpa_threshold,
             student_capacity=student_capacity
         )
+        # -> example of how to add subjects
+        # subjects_required_dict = {
+        #     "math101": 60,
+        #     "phy101": 70,
+        #     "chem101": 75
+        # } -> example of how to add subjects
+
+        if subjects_required_dict:
+            for subject_code, min_grade in subjects_required_dict.items():
+                new_subjects_required = RequiredSubject(
+                    code=subject_code,
+                    min_grade=min_grade
+                )
+                new_program.subjects_required.append(new_subjects_required)
+
         self.session.add(new_program)
         self.session.commit()
         return new_program
@@ -42,14 +56,24 @@ class ProgramService:
         if department_id is not None:
             program.department_id = department_id
             updated = True
-        if subjects_required is not None:
-            program.subjects_required = subjects_required
-            updated = True
         if gpa_threshold is not None:
             program.gpa_threshold = gpa_threshold
             updated = True
         if student_capacity is not None:
             program.student_capacity = student_capacity
+            updated = True
+
+        if subjects_required is not None:
+            # Clear existing subjects
+            program.subjects_required.clear()
+            # Add new subjects
+            for subject_code, min_grade in subjects_required.items():
+                new_subjects_required = RequiredSubject(
+                    code=subject_code,
+                    min_grade=min_grade
+                )
+                program.subjects_required.append(new_subjects_required)
+
             updated = True
 
         if updated:
@@ -72,3 +96,24 @@ class ProgramService:
 
     def get_by_name(self, name: str):
         return self.session.query(Program).filter(Program.name == name).first()
+
+
+
+
+
+
+
+# example usage of how to add a program
+# create a program
+# program_service = ProgramService(session)
+# program_service.create(
+#     name="Computer Science",
+#     department_id=1,
+#     gpa_threshold=3.0,
+#     student_capacity=100,
+#     subjects_required_dict={
+#         "math101": 60,
+#         "phy101": 70
+#     }
+# )
+# و نفس الطريقة في التخصص اشطا

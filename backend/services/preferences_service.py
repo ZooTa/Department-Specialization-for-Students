@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from ..database.models import Preferences
+from sqlalchemy import func
 
 
 class PreferencesService:
@@ -85,3 +86,27 @@ class PreferencesService:
             new_prefrences.append(new_prefrence)
         self.session.add_all(new_prefrences)
         self.session.commit()
+
+    def get_first_preference_percentages(self):
+        # Get total number of distinct students
+        total_students = self.session.query(func.count(Preferences.student_id_num.distinct())).scalar()
+
+        # Query the preferences for the first preference counts grouped by project name
+        first_preferences = self.session.query(
+            Preferences.name,
+            func.count(Preferences.student_id_num.distinct()).label('first_choice_count')
+        ).filter(
+            Preferences.preference_order == 1
+        ).group_by(
+            Preferences.name
+        ).all()
+
+        # Calculate percentages and build result dictionary
+        percentages = {}
+        for preference in first_preferences:
+            if total_students > 0:
+                percentages[preference.name] = (preference.first_choice_count / total_students) * 100
+            else:
+                percentages[preference.name] = 0.0
+
+        return percentages

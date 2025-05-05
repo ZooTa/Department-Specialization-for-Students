@@ -247,17 +247,36 @@ from backend.services.project_service import ProjectManager
 #         note=None
 #     )
 
-start_app(operation="new",
-          year=2029,
-          level=2,
-          term=1,
-          ptype="department",
-          student_file=r"Z:\projects new\Graduation project\Department-Specialization-for-Students\files\Converted_Student_Data_v4.csv",
-          preference_file=r"Z:\projects new\Graduation project\Department-Specialization-for-Students\files\form.csv",
-          note=None
+# start_app(operation="new",
+#           year=2029,
+#           level=2,
+#           term=1,
+#           ptype="department",
+#           student_file=r"Z:\projects new\Graduation project\Department-Specialization-for-Students\files\Converted_Student_Data_v4.csv",
+#           preference_file=r"Z:\projects new\Graduation project\Department-Specialization-for-Students\files\form.csv",
+#           note=None
+#           )
+
+start_app(operation="existing",
+          exist_db_folder=r"Z:\projects new\Graduation project\data\ClassInfo_2029_2_1_department",
           )
 
 pm = ProjectManager()
 path = pm.get_project_path()
 with get_session("database", path) as session:
-    pass
+    from backend.services.student_service import StudentService
+
+    student_service = StudentService(session)
+
+    # Fetch all students
+    all_students = student_service.get_all()
+    for student in all_students:
+        print(f"ID: {student.id_num}, Name: {student.name}, GPA: {student.gpa}")
+
+    from backend.services.preferences_service import PreferencesService
+
+    preferences_service = PreferencesService(session)
+
+    percentages = preferences_service.get_first_preference_percentages()
+    for project_name, percentage in percentages.items():
+        print(f"{project_name}: {percentage:.2f}%")

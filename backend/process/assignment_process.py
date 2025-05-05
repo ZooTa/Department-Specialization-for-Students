@@ -2,7 +2,6 @@
 
 class AssignmentProcess:
 
-
     def __init__(self, student_service, program_service, specialization_service, department_service):
         self.student_service = student_service
         self.program_service = program_service

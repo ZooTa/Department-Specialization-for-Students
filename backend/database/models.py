@@ -44,13 +44,13 @@ class Department(ProjectBase):
     __tablename__ = 'department'
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
-    student_capacity = Column(Integer, nullable=False)
+    # student_capacity = Column(Integer, nullable=False)
     # faculty_id = Column(Integer, ForeignKey('faculty.id'), nullable=False)
 
     # faculty = relationship('Faculty', back_populates='departments')
     programs = relationship('Program', back_populates='department', cascade='all, delete-orphan')
-    specializations = relationship('Specialization', back_populates='department', cascade='all, delete-orphan')
-
+    # specializations = relationship('Specialization', back_populates='department', cascade='all, delete-orphan')
+    #
     department_heads = relationship('DepartmentHead', back_populates='department', cascade='all, delete-orphan')
     # assignment_results = relationship('AssignmentResult', back_populates='department')
     # preferences = relationship('Preferences', back_populates='department')
@@ -61,7 +61,7 @@ class Program(ProjectBase):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
     department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
-    gpa_threshold = Column(Float, nullable=False)
+    gpa_threshold = Column(Float, nullable=True)
     student_capacity = Column(Integer, nullable=False)
 
     department = relationship('Department', back_populates='programs')
@@ -80,9 +80,9 @@ class Specialization(ProjectBase):
     gpa_threshold = Column(Float, nullable=False)
     student_capacity = Column(Integer, nullable=False)
     program_id = Column(Integer, ForeignKey('program.id'), nullable=False)
-    department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
+    # department_id = Column(Integer, ForeignKey('department.id'), nullable=False)
 
-    department = relationship('Department', back_populates='specializations')
+    # department = relationship('Department', back_populates='specializations')
     program = relationship('Program', back_populates='specializations')
 
     subjects_required = relationship('RequiredSubject', back_populates='specialization', cascade='all, delete-orphan')
@@ -97,8 +97,8 @@ class RequiredSubject(ProjectBase):
     code = Column(String, nullable=False)
     min_grade = Column(Integer, nullable=False)
 
-    program_id = Column(Integer, ForeignKey('program.id'), nullable=False)
-    specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=False)
+    program_id = Column(Integer, ForeignKey('program.id'), nullable=True)
+    specialization_id = Column(Integer, ForeignKey('specialization.id'), nullable=True)
 
     program = relationship('Program', back_populates='subjects_required')
     specialization = relationship('Specialization', back_populates='subjects_required')
@@ -202,9 +202,9 @@ class Preferences(ProjectBase):
     preference_order = Column(Integer)
 
     # Only one of these will be used, based on project type
-    department_id = Column(Integer, nullable=True)
-    program_id = Column(Integer, nullable=True)
-    specialization_id = Column(Integer, nullable=True)
+    # department_id = Column(Integer, nullable=True)
+    # program_id = Column(Integer, nullable=True)
+    # specialization_id = Column(Integer, nullable=True)
 
     student = relationship('Student', back_populates='preferences')
     # project = relationship('ProjectInfo', back_populates='preferences')
@@ -243,9 +243,9 @@ class StudentAssignment(ProjectBase):
     result = Column(String, nullable=True)
 
     # One of these based on project type
-    department_id = Column(Integer, nullable=True)
-    program_id = Column(Integer, nullable=True)
-    specialization_id = Column(Integer, nullable=True)
+    # department_id = Column(Integer, nullable=True)
+    # program_id = Column(Integer, nullable=True)
+    # specialization_id = Column(Integer, nullable=True)
 
     # assignment_date = Column(DateTime, nullable=False)
     # status = Column(String, nullable=False)  # e.g., "assigned", "pending", "failed"
