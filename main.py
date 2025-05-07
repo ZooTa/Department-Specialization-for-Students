@@ -190,6 +190,7 @@
 # Create a session
 
 from backend.database.database_config import get_session
+from backend.process.assignment_process import AssignmentProcess
 #
 # from backend.process.project_management import start_app
 # start_app(operation="existing",
@@ -203,7 +204,11 @@ from backend.database.database_config import get_session
 #
 #
 from backend.process.project_management import start_app
+from backend.services.department_service import DepartmentService
+from backend.services.program_service import ProgramService
+from backend.services.project_service import ProjectInfoService
 from backend.services.project_service import ProjectManager
+from backend.services.student_service import StudentService
 
 # Initialize user database
 # init_user_db()
@@ -251,32 +256,50 @@ from backend.services.project_service import ProjectManager
 #           year=2029,
 #           level=2,
 #           term=1,
-#           ptype="department",
+#           ptype='program',
 #           student_file=r"Z:\projects new\Graduation project\Department-Specialization-for-Students\files\Converted_Student_Data_v4.csv",
 #           preference_file=r"Z:\projects new\Graduation project\Department-Specialization-for-Students\files\form.csv",
 #           note=None
 #           )
 
 start_app(operation="existing",
-          exist_db_folder=r"Z:\projects new\Graduation project\data\ClassInfo_2029_2_1_department",
+          exist_db_folder=r"Z:\projects new\Graduation project\data\ClassInfo_2029_2_1_program",
           )
 
 pm = ProjectManager()
 path = pm.get_project_path()
 with get_session("database", path) as session:
-    from backend.services.student_service import StudentService
+    # from backend.services.student_service import StudentService
 
     student_service = StudentService(session)
+    #
+    # # Fetch all students
+    # all_students = student_service.get_all()
+    # for student in all_students:
+    #     print(f"ID: {student.id_num}, Name: {student.name}, GPA: {student.gpa}")
+    #
+    # # add department
+    # from backend.services.department_service import DepartmentService
+    # department_service = DepartmentService(session)
+    # dep1= department_service.create("Mathematics")
+    # department_service.create("Physics")
+    #
+    # # add program
+    # from backend.services.program_service import ProgramService
+    program_service = ProgramService(session)
+    #
+    # program_service.create("الاحصاء الرياضي", dep1.id, 1, 50)
+    # program_service.create("علوم الحاسب", dep1.id, 2, 50)
+    # program_service.create("رياضيات", dep1.id, 1, 50)
 
-    # Fetch all students
-    all_students = student_service.get_all()
-    for student in all_students:
-        print(f"ID: {student.id_num}, Name: {student.name}, GPA: {student.gpa}")
+    # add specialization
+    from backend.services.specialization_service import SpecializationService
 
-    from backend.services.preferences_service import PreferencesService
+    specialization_service = SpecializationService(session)
 
-    preferences_service = PreferencesService(session)
+    department_service = DepartmentService(session)
 
-    percentages = preferences_service.get_first_preference_percentages()
-    for project_name, percentage in percentages.items():
-        print(f"{project_name}: {percentage:.2f}%")
+    A = AssignmentProcess(student_service, program_service, specialization_service, department_service,
+                          ProjectInfoService(session))
+
+    A.assign_students()

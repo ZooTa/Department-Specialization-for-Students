@@ -244,7 +244,7 @@ class StudentAssignment(ProjectBase):
 
     # One of these based on project type
     # department_id = Column(Integer, nullable=True)
-    # program_id = Column(Integer, nullable=True)
+    program_id = Column(Integer, nullable=True)
     # specialization_id = Column(Integer, nullable=True)
 
     # assignment_date = Column(DateTime, nullable=False)

@@ -2,8 +2,9 @@
 
 from sqlalchemy.orm import Session
 
-from ..database.models import Student, Preferences
+from ..database.models import Student, Preferences, StudentAssignment
 
+from sqlalchemy import desc
 
 class StudentService:
     def __init__(self, session: Session):
@@ -114,3 +115,23 @@ class StudentService:
             new_students.append(new_student)
         self.session.add_all(new_students)
         self.session.commit()
+
+    def ranked_students(self):
+        return self.session.query(Student).order_by(desc(Student.gpa)).all()
+
+    def assign_to_prefered_program(self, student_id, program_id, program_name):
+        student = self.get(student_id)
+        if not student:
+            print("Student not found.")
+            return None
+
+        result =StudentAssignment(
+
+            program_id=program_id,
+            result=program_name
+        )
+        student.assignment_results.append(result)
+
+        self.session.add(result)
+        self.session.commit()
+        return student

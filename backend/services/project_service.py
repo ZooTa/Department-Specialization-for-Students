@@ -94,3 +94,9 @@ class ProjectInfoService:
         self.session.delete(project)
         self.session.commit()
         return project
+
+    def get_project_type(self, project_id: int = 1):
+        project = self.get(project_id)
+        if not project:
+            return None
+        return project.ptype

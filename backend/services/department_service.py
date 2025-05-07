@@ -8,10 +8,10 @@ class DepartmentService:
     def __init__(self, session: Session):
         self.session = session
 
-    def create(self, name, student_capacity):
+    def create(self, name):
         new_department = Department(
             name=name,
-            student_capacity=student_capacity,
+            # student_capacity=student_capacity,
         )
         self.session.add(new_department)
         self.session.commit()

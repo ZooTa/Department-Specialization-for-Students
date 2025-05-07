@@ -9,7 +9,8 @@ class ProgramService:
     def __init__(self, session: Session):
         self.session = session
 
-    def create(self, name:str, department_id:int, gpa_threshold:float = None, student_capacity:int= None, subjects_required_dict:dict = None):
+    def create(self, name: str, department_id: int, gpa_threshold: float = None, student_capacity: int = None,
+               subjects_required_dict: dict = None):
         new_program = Program(
             name=name,
             department_id=department_id,
@@ -96,12 +97,6 @@ class ProgramService:
 
     def get_by_name(self, name: str):
         return self.session.query(Program).filter(Program.name == name).first()
-
-
-
-
-
-
 
 # example usage of how to add a program
 # create a program
