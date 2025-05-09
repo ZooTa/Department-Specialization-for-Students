@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from ..database.models import Program, RequiredSubject
 
+from .student_assignment_service import StudentAssignmentService
 
 class ProgramService:
     def __init__(self, session: Session):
@@ -97,6 +98,24 @@ class ProgramService:
 
     def get_by_name(self, name: str):
         return self.session.query(Program).filter(Program.name == name).first()
+
+    def get_all_and_capacity(self):
+        programs = self.session.query(Program).all()
+        program_capacity = {program.name: program.student_capacity for program in programs}
+        return program_capacity
+
+
+
+    def get_filled_percentage(self):
+        student_assignment_service = StudentAssignmentService(self.session)
+        result_count = student_assignment_service.get_result_frequencies()
+
+        programs = self.session.query(Program).all()
+
+        filled_percentage = {}
+        for program in programs:
+            filled_percentage[program.name] = (result_count[program.name] / program.student_capacity) * 100 if program.student_capacity and program.name in result_count else 0
+        return filled_percentage
 
 # example usage of how to add a program
 # create a program

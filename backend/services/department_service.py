@@ -23,7 +23,7 @@ class DepartmentService:
     def get_all(self):
         return self.session.query(Department).all()
 
-    def update(self, department_id, name=None, student_capacity=None):
+    def update(self, department_id, name=None):
         department = self.get(department_id)
         if not department:
             print("Department not found.")
@@ -34,9 +34,9 @@ class DepartmentService:
         if name is not None:
             department.name = name
             updated = True
-        if student_capacity is not None:
-            department.student_capacity = student_capacity
-            updated = True
+        # if student_capacity is not None:
+        #     department.student_capacity = student_capacity
+        #     updated = True
         # if faculty_id is not None:
         #     department.faculty_id = faculty_id
         #     updated = True

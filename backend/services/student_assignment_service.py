@@ -1,3 +1,4 @@
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from ..database.models import StudentAssignment
 import pandas as pd
@@ -92,3 +93,17 @@ class StudentAssignmentService:
 
         # Save to CSV
         df.to_csv(file_path, index=False)
+
+
+    # read how many has been assigned to each program
+    def get_result_frequencies(self):
+        """
+        Returns a dictionary of result counts, excluding None values.
+        """
+        result_counts = (
+            self.session.query(StudentAssignment.result, func.count(StudentAssignment.result))
+            .filter(StudentAssignment.result.isnot(None))  # Exclude NULLs
+            .group_by(StudentAssignment.result)
+            .all()
+        )
+        return {result: count for result, count in result_counts}

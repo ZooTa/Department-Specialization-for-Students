@@ -293,13 +293,18 @@ with get_session("database", path) as session:
     # program_service.create("رياضيات", dep1.id, 1, 50)
 
     # add specialization
-    from backend.services.specialization_service import SpecializationService
+    # from backend.services.specialization_service import SpecializationService
+    #
+    # specialization_service = SpecializationService(session)
+    #
+    # department_service = DepartmentService(session)
+    #
+    # A = AssignmentProcess(student_service, program_service, specialization_service, department_service,
+    #                       ProjectInfoService(session))
+    #
+    # A.assign_students()
 
-    specialization_service = SpecializationService(session)
-
-    department_service = DepartmentService(session)
-
-    A = AssignmentProcess(student_service, program_service, specialization_service, department_service,
-                          ProjectInfoService(session))
-
-    A.assign_students()
+    # show capacities
+    percentage_dict = program_service.get_filled_percentage()
+    for program, percentage in percentage_dict.items():
+        print(f"Program: {program}, Capacity: {percentage}")
