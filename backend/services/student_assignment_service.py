@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from ..database.models import StudentAssignment
 import pandas as pd
 
+from pathlib import Path
+
 class StudentAssignmentService:
     def __init__(self, session: Session):
         self.session = session
@@ -78,21 +80,23 @@ class StudentAssignmentService:
         return assignment
 
 
-    def save_to_csv(self, file_path):
+    def save_to_csv(self, directory):
         # Fetch all assignments
         assignments = self.get_all()
 
         # Convert to DataFrame
         data = [{
-            'student_id': assignment.student_id,
-            'student_name': assignment.student_id.student.name,
+            'student_id': assignment.student_id_num,
+            'student_name': assignment.student.name,
             'result': assignment.result
         } for assignment in assignments]
 
         df = pd.DataFrame(data)
 
+        print(df)
         # Save to CSV
-        df.to_csv(file_path, index=False)
+        file_path = Path(directory) / "results.csv"
+        df.to_csv(file_path, index=False, encoding='utf-8-sig')
 
 
     # read how many has been assigned to each program
@@ -107,3 +111,5 @@ class StudentAssignmentService:
             .all()
         )
         return {result: count for result, count in result_counts}
+
+

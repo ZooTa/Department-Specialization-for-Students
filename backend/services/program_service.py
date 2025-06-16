@@ -2,9 +2,11 @@
 
 from sqlalchemy.orm import Session
 
+from .student_assignment_service import StudentAssignmentService
 from ..database.models import Program, RequiredSubject
 
-from .student_assignment_service import StudentAssignmentService
+from typing import List
+
 
 class ProgramService:
     def __init__(self, session: Session):
@@ -104,8 +106,6 @@ class ProgramService:
         program_capacity = {program.name: program.student_capacity for program in programs}
         return program_capacity
 
-
-
     def get_filled_percentage(self):
         student_assignment_service = StudentAssignmentService(self.session)
         result_count = student_assignment_service.get_result_frequencies()
@@ -131,3 +131,23 @@ class ProgramService:
 #     }
 # )
 # و نفس الطريقة في التخصص اشطا
+
+
+def allocate_students(total_capacity: int, percentages: List[str]) -> List[int]:
+    if len(percentages) > 6:
+        raise ValueError("You can only allocate up to 6 programs.")
+
+    percent_values = [float(p.strip('%')) / 100 for p in percentages]
+    allocations = [int(total_capacity * p) for p in percent_values]
+    diff = total_capacity - sum(allocations)
+
+    if diff > 0:
+        remainders = [
+            (i, total_capacity * percent_values[i] - allocations[i])
+            for i in range(len(percent_values))
+        ]
+        remainders.sort(key=lambda x: x[1], reverse=True)
+        for i in range(diff):
+            allocations[remainders[i][0]] += 1
+
+    return allocations

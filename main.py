@@ -204,11 +204,8 @@ from backend.process.assignment_process import AssignmentProcess
 #
 #
 from backend.process.project_management import start_app
-from backend.services.department_service import DepartmentService
-from backend.services.program_service import ProgramService
 from backend.services.project_service import ProjectInfoService
 from backend.services.project_service import ProjectManager
-from backend.services.student_service import StudentService
 
 # Initialize user database
 # init_user_db()
@@ -253,7 +250,7 @@ from backend.services.student_service import StudentService
 #     )
 
 # start_app(operation="new",
-#           year=2029,
+#           year=2069,
 #           level=2,
 #           term=1,
 #           ptype='program',
@@ -263,48 +260,93 @@ from backend.services.student_service import StudentService
 #           )
 
 start_app(operation="existing",
-          exist_db_folder=r"Z:\projects new\Graduation project\data\ClassInfo_2029_2_1_program",
+          exist_db_folder=r"Z:\projects new\Graduation project\data\ClassInfo_2069_2_1_program",
           )
 
 pm = ProjectManager()
 path = pm.get_project_path()
 with get_session("database", path) as session:
-    # from backend.services.student_service import StudentService
+    from backend.services.student_service import StudentService
 
+
+    #
     student_service = StudentService(session)
+
+    # print(student_service.check_if_any_assigned())
+
+
+
+    # assigned_students = student_service.get_assigned_students("علوم الحاسب")
     #
-    # # Fetch all students
-    # all_students = student_service.get_all()
-    # for student in all_students:
+    # for student in assigned_students:
     #     print(f"ID: {student.id_num}, Name: {student.name}, GPA: {student.gpa}")
-    #
-    # # add department
-    # from backend.services.department_service import DepartmentService
+
+    #علوم الحاسب
+    # #
+    # # Fetch all students
+    # student_service = StudentService(session)
+    # # all_students = student_service.get_all()
+    # # for student in all_students:
+    # #     print(f"ID: {student.id_num}, Name: {student.name}, GPA: {student.gpa}")
+    # # #
+    # add department
+    from backend.services.department_service import DepartmentService
+
     # department_service = DepartmentService(session)
-    # dep1= department_service.create("Mathematics")
+    # dep1 = department_service.create("Mathematics")
     # department_service.create("Physics")
-    #
-    # # add program
-    # from backend.services.program_service import ProgramService
+
+    # add program
+    from backend.services.program_service import ProgramService
+
     program_service = ProgramService(session)
-    #
+
     # program_service.create("الاحصاء الرياضي", dep1.id, 1, 50)
     # program_service.create("علوم الحاسب", dep1.id, 2, 50)
     # program_service.create("رياضيات", dep1.id, 1, 50)
 
     # add specialization
-    # from backend.services.specialization_service import SpecializationService
+    from backend.services.specialization_service import SpecializationService
+
+    specialization_service = SpecializationService(session)
+
+    department_service = DepartmentService(session)
     #
-    # specialization_service = SpecializationService(session)
-    #
-    # department_service = DepartmentService(session)
-    #
-    # A = AssignmentProcess(student_service, program_service, specialization_service, department_service,
-    #                       ProjectInfoService(session))
-    #
-    # A.assign_students()
+    A = AssignmentProcess(student_service, program_service, specialization_service, department_service,
+                          ProjectInfoService(session))
+
+    A.clear_and_assign_students()
 
     # show capacities
-    percentage_dict = program_service.get_filled_percentage()
-    for program, percentage in percentage_dict.items():
-        print(f"Program: {program}, Capacity: {percentage}")
+    # percentage_dict = program_service.get_filled_percentage()
+    # for program, percentage in percentage_dict.items():
+    #     print(f"Program: {program}, Capacity: {percentage}")
+
+    # save results
+    # from backend.services.student_assignment_service import StudentAssignmentService
+    # student_assignment_service = StudentAssignmentService(session)
+    #
+    # student_assignment_service.save_to_csv(path)
+
+    #     # send emails
+    # from backend.process.emails_process import EmailSender
+    # from backend.services.student_service import StudentService
+    #
+    # student_service = StudentService(session)
+    # email_sender = EmailSender(student_service,
+    #                            "abanoubn843@gmail.com",
+    #                            "bdli vdpt eize rrnf")
+    # email_sender.send_batch_emails()
+
+
+
+# generate report
+    from backend.services.preferences_service import PreferencesService
+
+    from backend.process.report_generation import ReportService
+
+    report_service = ReportService(PreferencesService(session))
+    report_service.generate_pdf_report("my_report.pdf")
+
+
+

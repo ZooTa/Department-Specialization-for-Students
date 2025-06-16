@@ -38,6 +38,14 @@ class StudentService:
     def get_all(self):
         return self.session.query(Student).all()
 
+    def get_assigned_students(self, result_name):
+        return (
+            self.session.query(Student)
+            .join(StudentAssignment, Student.assignment_results)
+            .filter(StudentAssignment.result == result_name)
+            .all()
+        )
+
     def update(self, student_id, id_num=None, name=None, email=None, gpa=None, preference_names=None):
         student = self.get(student_id)
         if not student:
@@ -125,7 +133,7 @@ class StudentService:
             print("Student not found.")
             return None
 
-        result =StudentAssignment(
+        result = StudentAssignment(
 
             program_id=program_id,
             result=program_name
@@ -135,3 +143,60 @@ class StudentService:
         self.session.add(result)
         self.session.commit()
         return student
+
+    def assign_to_prefered_specialization(self, student_id, specialization_id, specialization_name):
+        student = self.get(student_id)
+        if not student:
+            print("Student not found.")
+            return None
+
+        result = StudentAssignment(
+            specialization_id=specialization_id,
+            result=specialization_name
+        )
+        student.assignment_results.append(result)
+
+        self.session.add(result)
+        self.session.commit()
+        return student
+
+    def assign_to_prefered_department(self, student_id, department_id, department_name):
+        student = self.get(student_id)
+        if not student:
+            print("Student not found.")
+            return None
+
+        result = StudentAssignment(
+            department_id=department_id,
+            result=department_name
+        )
+        student.assignment_results.append(result)
+
+        self.session.add(result)
+        self.session.commit()
+        return student
+
+    def check_if_assigned(self, student_id: int) -> bool:
+        """
+        Check if a student has already been assigned to a project.
+        Returns True if assigned, False otherwise.
+        """
+        return (
+            self.session.query(StudentAssignment)
+            .filter(StudentAssignment.student_id_num == student_id)
+            .count() > 0
+        )
+
+    def check_if_any_assigned(self) -> bool:
+        """
+        Check if there are any assignments in the database.
+        Returns True if assigned students exist, False otherwise.
+        """
+        return self.session.query(StudentAssignment).count() > 0
+
+    def clear_all_assignments(self) -> None:
+        """
+        Delete all records from the StudentAssignment table.
+        """
+        self.session.query(StudentAssignment).delete()
+        self.session.commit()

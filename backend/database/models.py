@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime, UniqueConstraint
-from sqlalchemy.orm import relationship
 import bcrypt
+from sqlalchemy import Column, Integer, String, ForeignKey, Float
+from sqlalchemy.orm import relationship
 
 from .base_models import UserBase, ProjectBase
 
@@ -243,9 +243,9 @@ class StudentAssignment(ProjectBase):
     result = Column(String, nullable=True)
 
     # One of these based on project type
-    # department_id = Column(Integer, nullable=True)
+    department_id = Column(Integer, nullable=True)
     program_id = Column(Integer, nullable=True)
-    # specialization_id = Column(Integer, nullable=True)
+    specialization_id = Column(Integer, nullable=True)
 
     # assignment_date = Column(DateTime, nullable=False)
     # status = Column(String, nullable=False)  # e.g., "assigned", "pending", "failed"

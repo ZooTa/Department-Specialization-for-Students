@@ -17,7 +17,21 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="\files\أقسام_العلوم.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="\files\برامج_الأقسام_مع_شروط_التشعيب.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="\files\تخصصات_البرامج_مع_الشروط.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

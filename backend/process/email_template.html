@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>إخطار بالقبول</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #D3D3D3;
+            padding: 20px;
+            direction: rtl;
+        }
+        .container {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+        .header {
+            text-align: center;
+            background-color: #002147;
+            color: #FFC107;
+            padding: 15px;
+            border-radius: 8px 8px 0 0;
+        }
+        .header h2 {
+            margin: 0;
+            font-size: 22px;
+        }
+        .content {
+            font-size: 16px;
+            color: #002147;
+            padding: 20px;
+        }
+        .content strong {
+            color: #FFC107;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #002147;
+            border-top: 1px solid #ccc;
+            padding-top: 15px;
+        }
+        .footer a {
+            color: #FFC107;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>إخطار بالقبول في القسم</h2>
+    </div>
+    <div class="content">
+        <p>عزيزي/عزيزتي <strong>{{name}}</strong>،</p>
+
+        <p>نود إعلامك بأنه قد تم قبولك في قسم <strong>{{department}}</strong> للعام الدراسي الجديد.</p>
+
+        <p>نتمنى لك التوفيق والنجاح في مسيرتك الأكاديمية، ونحن على ثقة بأنك ستكون إضافة متميزة للقسم.</p>
+
+        <p>في حال وجود أي استفسارات، لا تتردد في التواصل معنا.</p>
+    </div>
+
+    <div class="footer">
+        <p>مع تحياتنا،<br>إدارة شؤون الطلاب</p>
+        <p>للتواصل: يرجى مراسلتنا على
+        <a href="mailto:admissions@example.edu">admissions@example.edu</a></p>
+    </div>
+</div>
+
+</body>
+</html>

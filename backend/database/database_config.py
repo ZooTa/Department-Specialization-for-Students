@@ -11,8 +11,8 @@ BASE_PATH = Path("../data").resolve()  # Normalize base path
 user_db_uri = f"sqlite:///{BASE_PATH / 'user_info.db'}"
 user_engine = create_engine(user_db_uri, echo=True)
 
-
 from pathlib import Path
+
 
 def get_db_path(project_name: str) -> Path:
     if not project_name:
@@ -23,6 +23,7 @@ def get_db_path(project_name: str) -> Path:
     db_path = base / project_name / "database.db"
     return db_path
 
+
 def init_user_db():
     """Initialize the global user database."""
 
@@ -31,10 +32,12 @@ def init_user_db():
     UserBase.metadata.create_all(user_engine)
     print("GlobalBase and its tables created successfully.")
 
+
 def get_project_engine(project_name: str):
     """Get the SQLAlchemy engine for the project database."""
-    db_path = get_db_path(project_name) # Use pathlib to construct the path
+    db_path = get_db_path(project_name)  # Use pathlib to construct the path
     return create_engine(f"sqlite:///{db_path}", echo=True)
+
 
 def init_project_database(project_name: str):
     """Initialize the project database at the specified path."""
@@ -118,7 +121,7 @@ def get_session(source: str = "user", project_path: str = None):
     try:
         yield session
         session.commit()
-    except Exception as e:
+    except Exception:
         session.rollback()
         raise
     finally:
