@@ -1,49 +1,41 @@
-# Student Affairs Management System
+---
+icon: lightbulb
+layout:
+  title:
+    visible: true
+  description:
+    visible: true
+  tableOfContents:
+    visible: true
+  outline:
+    visible: true
+  pagination:
+    visible: true
+---
 
-This application is designed to streamline student affairs processes using a user-friendly interface built with PyQt6 and backed by a secure SQLite database managed via SQLAlchemy.
+# **Project Overview**  
 
-## 📦 Required Libraries
+## **Introduction**  
 
-To run this project, make sure you have **Python 3.9+** installed. Then, install the required dependencies using the following commands:
+Welcome to the **Department Specialization Management System** documentation. This project is designed to **streamline the process of assigning students to specialized departments** within educational institutions. By automating the evaluation of student preferences against department eligibility criteria, the system **enhances administrative efficiency and accuracy**.  
 
-```bash
-pip install SQLAlchemy~=2.0.39
-pip install PyQt6~=6.7.1
-pip install bcrypt~=4.3.0
-pip install pandas~=2.0.3
-pip install openpyxl~=3.1.5
-🔐 Login Credentials
-Admin Interface
-Username: Eman
+## **Purpose**  
 
-Password: 111
+The primary goal of this system is to **facilitate the allocation of students** to their preferred departments based on predefined criteria such as:  
+- **Completed subjects**  
+- **GPA**  
+- **Department capacity**  
 
-Student Affairs Interface
-Username: Ekram
+This ensures a **fair and transparent process**, reducing the **manual workload** on administrative staff and minimizing errors.  
 
-Password: 333
+## **Key Features**  
 
-📂 Project Data
-Depending on your use case:
+- **Automated Processing:** The system processes student preferences and eligibility criteria to **automatically assign students to departments**.  
+- **Program Management:** Administrators can **add, update, and manage department programs** and their criteria.  
+- **Notification System:** Automated notifications **keep department heads and students informed** about assignments and updates.  
+- **Data Management:** Features for **data backup and recovery** ensure the integrity and availability of critical information.  
+- **User Access Control:** The system provides **robust user access management** to secure sensitive data and operations.  
 
-Continuing an old project:
-Use the data provided in the following folder:
+## **Background**  
 
-COPY
-EDIT
-Data/Class_2024
-Starting a new project:
-You can use the same folder as a reference, in addition to:
-
-bash
-COPY
-EDIT
-Files/Converted_Student_Data_v4
-Files/form
-If you encounter any issues or need further assistance, feel free to open an issue or contact the project maintainer.
-
-vbnet
-COPY
-EDIT
-
-Let me know if you'd like to add a usage guide, screenshots, or contribution instructions.
+In many educational institutions, the process of assigning students to departments is often **manual and time-consuming**, leading to **inefficiencies and potential errors**. This project addresses these challenges by providing a **digital solution that integrates seamlessly** with existing systems and processes.  
